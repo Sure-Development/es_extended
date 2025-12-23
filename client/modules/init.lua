@@ -123,13 +123,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
 end)
 
 RegisterNetEvent('esx:setInventory', function(newInventory)
-  local _newInventory = {}
-
-  for _, item in ipairs(newInventory) do
-    _newInventory[item.name] = item
-  end
-
-  ESX.SetPlayerData('inventory', _newInventory)
+  ESX.SetPlayerData('inventory', newInventory)
 end)
 
 local function onPlayerSpawn()
