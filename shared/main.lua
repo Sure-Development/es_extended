@@ -11,6 +11,8 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
+local await = Citizen.Await
+
 ---@class DEX
 ESX = {}
 DEBUG = (GetResourceMetadata('es_extended', 'dogeaterx_debug', 0) or 'no') == 'yes'
@@ -19,7 +21,7 @@ BOOTSTRAP = promise.new()
 require('settings.locale')
 
 exports('getSharedObject', function(targetFunc)
-  Citizen.Await(BOOTSTRAP)
+  await(BOOTSTRAP)
 
   if targetFunc and ESX[targetFunc] then
     return ESX[targetFunc]
@@ -30,7 +32,7 @@ end)
 
 AddEventHandler('esx:getSharedObject', function(cb)
   if ESX.IsFunctionReference(cb) then
-    Citizen.Await(BOOTSTRAP)
+    await(BOOTSTRAP)
     cb(ESX)
   end
 end)
