@@ -1,77 +1,15 @@
-# es_extended
-Project dogeaterx - fork of ESX
+<p align=center>
+ <img src=https://raw.githubusercontent.com/mysbryce/mysbryce/refs/heads/main/dogeaterx-thumbnail.png alt="Elysia Banner" />
+</p>
 
-## สรุปการปรับปรุงและการเปลี่ยนแปลงจาก ESX Core ต้นฉบับ
+<h3 align=center>Dogeaterx Project</h3>
+<p align=center>FiveM - Framework (es_extended Forked)</p>
 
-### การปรับปรุงประสิทธิภาพ (Performance Optimizations)
+<p align=center>
+    <a href=https://discord.gg/PUJN868WET>Discord</a>
+</p>
 
-#### 1. **การจัดการข้อมูลผู้เล่น (Player Data Management)**
-- **State Bags**: ใช้ State Bags สำหรับซิงค์ข้อมูลผู้เล่นระหว่าง client และ server
-- **Items JSON Cache**: เก็บข้อมูล items ในไฟล์ JSON เพื่อโหลดเร็วขึ้น
-- **Minimal Inventory**: การส่งข้อมูล inventory แบบ minimal เพื่อลดขนาดข้อมูล
-- **Accounts, Inventory, Loadout (Hash-Table)**: เก็บข้อมูล ESX.PlayerData.(accounts|inventory|loadout) แบบ Hash Table สามารถใช้ชื่อ item, account หรือ loadout ดึงข้อมูลได้ทันที
+<br>
 
-#### 2. **ระบบ Callback และ Async**
-- **lib.callback**: เปลี่ยนจาก ESX.RegisterServerCallback เป็น lib.callback จาก ox_lib
-- **Promise System**: ใช้ promise สำหรับจัดการ async operations
-- **Better Error Handling**: เพิ่มการจัดการ error ที่ดีขึ้นด้วย pcall
-
-### การเปลี่ยนแปลงทางเทคนิค (Technical Changes)
-
-#### 1. **เวอร์ชันและ Dependencies**
-- **ox_lib**: ใช้ ox_lib แทน utility functions เก่า
-- **React 19 + TypeScript**: NUI ใช้ React 19 และ TypeScript แทน HTML/CSS/JS เก่า
-
-#### 2. **โครงสร้างโค้ด (Code Structure)**
-- **TypeScript Definitions**: เพิ่ม type annotations สำหรับ type safety
-- **Modular Design**: แยกโค้ดเป็น modules อย่างชัดเจน
-- **Better Code Organization**: จัดระเบียบโค้ดให้อ่านง่ายขึ้น
-
-### ฟีเจอร์ใหม่ (New Features)
-
-#### 1. **Adjustments Module**
-- ระบบปรับแต่งเกมแบบครบวงจร:
-  - ปิด/เปิด HUD components
-  - ปิด/เปิด Aim Assist
-  - ปิด/เปิด NPC Drops
-  - ปิด/เปิด Vehicle Seat Shuffle
-  - ปิด/เปิด Health Regeneration
-  - ตั้งค่า PvP
-  - ปรับแต่ง Density Multipliers (Ped, Vehicle, etc.)
-  - ปิด/เปิด Wanted Level
-  - ปิด/เปิด Radio
-
-#### 2. **NUI System**
-- **Modern React UI**: ใช้ React 19 + TypeScript + Vite
-- **Better Developer Tools**: มี Tree Viewer สำหรับ debug
-
-#### 3. **Better Player Loading**
-- ระบบโหลดผู้เล่นที่ปรับปรุงแล้ว
-- รองรับการตรวจสอบ streaming requests
-- มีระบบ freeze player ระหว่างโหลด
-
-### 🔧 การปรับปรุงอื่นๆ (Other Improvements)
-
-#### 1. **Job System**
-- ระบบนับจำนวนผู้เล่นในแต่ละ job ที่ดีขึ้น
-- ใช้ GlobalState สำหรับ sync job counts
-- มี Core.IdsByJobs สำหรับค้นหาผู้เล่นตาม job
-
-#### 2. **Item System**
-- ระบบ refresh items ที่ดีขึ้น
-- ตรวจสอบการเปลี่ยนแปลง items และแจ้งเตือน
-- รองรับการ refresh player inventories อัตโนมัติ
-
-### หมายเหตุ
-
-- โปรเจคนี้เป็น fork ของ ESX Core ต้นฉบับ
-- รองรับ backward compatibility กับ ESX resources อื่นๆ
-- ต้องใช้ oxmysql และ ox_lib เป็น dependencies
-- ต้องใช้ OneSync (ไม่รองรับ legacy mode)
-- ไม่รองรับการ loop table ด้วย ipairs (inventory, accounts, loadout) 
-
----
-
-**พัฒนาโดย**: Dogeaterx (Sure)  
-**Discord**: https://discord.gg/Pnsta3xnZX  
-**เวอร์ชัน**: 2.0.0-pitbull-beta
+<p align=center>Modern-first framework for developing FiveM Server</p>
+<p align=center><strong>Version</strong>: 2.0.0-pitbull-beta</p>
