@@ -1,0 +1,15 @@
+name: ❓ General Issue
+description: ปัญหาหรือคำถามทั่วไปเกี่ยวกับ repository
+labels: ["question"]
+title: "Issue: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **อธิบายปัญหาหรือคำถามของคุณด้านล่าง**
+  - type: input
+    id: general_description
+    attributes:
+      label: รายละเอียด
+      placeholder: "คำถามหรือรายละเอียด…"
+      required: true

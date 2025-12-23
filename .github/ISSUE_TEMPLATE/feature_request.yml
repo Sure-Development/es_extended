@@ -1,0 +1,20 @@
+name: ✨ Feature Request
+description: ขอเพิ่มฟีเจอร์ใหม่หรือปรับปรุง
+labels: ["enhancement"]
+title: "Feature: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **ขอข้อมูลฟีเจอร์ที่ต้องการให้ชัดเจน เพื่อช่วยให้ทีมพัฒนาเข้าใจเป้าหมาย**
+  - type: input
+    id: feature_description
+    attributes:
+      label: รายละเอียดฟีเจอร์
+      placeholder: "อธิบายว่าต้องการอะไร…"
+      required: true
+  - type: input
+    id: motivation
+    attributes:
+      label: ทำไมต้องการฟีเจอร์นี้
+      placeholder: "เหตุผลที่ฟีเจอร์นี้จำเป็น…"
