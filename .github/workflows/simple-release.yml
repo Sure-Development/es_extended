@@ -41,4 +41,4 @@ jobs:
           prerelease: false
           generateReleaseNotes: true
           tag: v${{ steps.get_version.outputs.version }}
-          name: "Release v${{ steps.get_version.outputs.version }}"
+          name: "${{ steps.get_version.outputs.version }}"
