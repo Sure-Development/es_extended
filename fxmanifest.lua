@@ -3,7 +3,7 @@ fx_version 'cerulean'
 
 description 'The Core resource that provides the functionalities for all other resources.'
 lua54 'yes'
-version '2.0.0-pitbull'
+version '2.0.0-pitbull-beta'
 use_experimental_fxv2_oal 'yes'
 author 'ESX | Dogeaterx (Sure)'
 
