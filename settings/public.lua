@@ -15,10 +15,10 @@
 local PUBLIC = {}
 
 --- กำหนดบัญชีของผู้เล่น
----@class Settings.Public.account
+---@class Settings.Public.Account
 ---@field label string ชื่อระบุ
 ---@field round boolean ปัดเศษหรือไม่
----@type table<string, Settings.Public.account>
+---@type table<string, Settings.Public.Account>
 PUBLIC.accounts = {
   bank = {
     label = TranslateCap('account_bank'),
@@ -35,7 +35,7 @@ PUBLIC.accounts = {
 }
 
 --- กำหนดของเริ่มต้น
----@class Settings.Public.starter
+---@class Settings.Public.Starter
 ---@field accounts table<string, integer> [ชื่อบัญชี] = จำนวนเงิน
 ---@field items table<string, integer> [ชื่อไอเทม] = จำนวนไอเทม
 PUBLIC.starter = {
