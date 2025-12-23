@@ -1,0 +1,217 @@
+--[[
+    _________________________________________
+   |    __      _                            |
+   |  o'')}____//      D O G E A T E R X     |
+   |   `_/      )      Development           |
+   |   (_(_/-(_/                             |
+   |_________________________________________|
+
+  Discord : https://discord.gg/Pnsta3xnZX
+
+  ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
+--]]
+
+---@param weaponTints Settings.WeaponTints
+---@return DEX.Config.Weapon[]
+return function(weaponTints)
+  return {
+    {
+      name = 'WEAPON_ASSAULTSMG',
+      label = TranslateCap('weapon_assaultsmg'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SMG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_ASSAULTSMG_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_ASSAULTSMG_CLIP_02` },
+        { name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH` },
+        { name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_MACRO` },
+        { name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP_02` },
+        { name = 'luxary_finish', label = TranslateCap('component_luxary_finish'), hash = `COMPONENT_ASSAULTSMG_VARMOD_LOWRIDER` },
+      },
+    },
+    {
+      name = 'WEAPON_COMBATMG',
+      label = TranslateCap('weapon_combatmg'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_COMBATMG_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_COMBATMG_CLIP_02` },
+        { name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_MEDIUM` },
+        { name = 'grip', label = TranslateCap('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP` },
+        { name = 'luxary_finish', label = TranslateCap('component_luxary_finish'), hash = `COMPONENT_COMBATMG_VARMOD_LOWRIDER` },
+      },
+    },
+    {
+      name = 'WEAPON_COMBATMG_MK2',
+      label = TranslateCap('weapon_combatmg_mk2'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MG` },
+      tints = weaponTints.mk2_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_COMBATMG_MK2_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_COMBATMG_MK2_CLIP_02` },
+        { name = 'ammo_tracer', label = TranslateCap('component_ammo_tracer'), hash = `COMPONENT_COMBATMG_MK2_CLIP_TRACER` },
+        { name = 'ammo_incendiary', label = TranslateCap('component_ammo_incendiary'), hash = `COMPONENT_COMBATMG_MK2_CLIP_INCENDIARY` },
+        { name = 'ammo_hollowpoint', label = TranslateCap('component_ammo_hollowpoint'), hash = `COMPONENT_COMBATMG_MK2_CLIP_ARMORPIERCING` },
+        { name = 'ammo_fmj', label = TranslateCap('component_ammo_fmj'), hash = `COMPONENT_COMBATMG_MK2_CLIP_FMJ` },
+        { name = 'grip', label = TranslateCap('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP_02` },
+        { name = 'scope_holo', label = TranslateCap('component_scope_holo'), hash = `COMPONENT_AT_SIGHTS` },
+        { name = 'scope_medium', label = TranslateCap('component_scope_medium'), hash = `COMPONENT_AT_SCOPE_SMALL_MK2` },
+        { name = 'scope_large', label = TranslateCap('component_scope_large'), hash = `COMPONENT_AT_SCOPE_MEDIUM_MK2` },
+        { name = 'muzzle_flat', label = TranslateCap('component_muzzle_flat'), hash = `COMPONENT_AT_MUZZLE_01` },
+        { name = 'muzzle_tactical', label = TranslateCap('component_muzzle_tactical'), hash = `COMPONENT_AT_MUZZLE_02` },
+        { name = 'muzzle_fat', label = TranslateCap('component_muzzle_fat'), hash = `COMPONENT_AT_MUZZLE_03` },
+        { name = 'muzzle_precision', label = TranslateCap('component_muzzle_precision'), hash = `COMPONENT_AT_MUZZLE_04` },
+        { name = 'muzzle_heavy', label = TranslateCap('component_muzzle_heavy'), hash = `COMPONENT_AT_MUZZLE_05` },
+        { name = 'muzzle_slanted', label = TranslateCap('component_muzzle_slanted'), hash = `COMPONENT_AT_MUZZLE_06` },
+        { name = 'muzzle_split', label = TranslateCap('component_muzzle_split'), hash = `COMPONENT_AT_MUZZLE_07` },
+        { name = 'barrel_default', label = TranslateCap('component_barrel_default'), hash = `COMPONENT_AT_MG_BARREL_01` },
+        { name = 'barrel_heavy', label = TranslateCap('component_barrel_heavy'), hash = `COMPONENT_AT_MG_BARREL_02` },
+        { name = 'camo_finish', label = TranslateCap('component_camo_finish'), hash = `COMPONENT_COMBATMG_MK2_CAMO` },
+        { name = 'camo_finish2', label = TranslateCap('component_camo_finish2'), hash = `COMPONENT_COMBATMG_MK2_CAMO_02` },
+        { name = 'camo_finish3', label = TranslateCap('component_camo_finish3'), hash = `COMPONENT_COMBATMG_MK2_CAMO_03` },
+        { name = 'camo_finish4', label = TranslateCap('component_camo_finish4'), hash = `COMPONENT_COMBATMG_MK2_CAMO_04` },
+        { name = 'camo_finish5', label = TranslateCap('component_camo_finish5'), hash = `COMPONENT_COMBATMG_MK2_CAMO_05` },
+        { name = 'camo_finish6', label = TranslateCap('component_camo_finish6'), hash = `COMPONENT_COMBATMG_MK2_CAMO_06` },
+        { name = 'camo_finish7', label = TranslateCap('component_camo_finish7'), hash = `COMPONENT_COMBATMG_MK2_CAMO_07` },
+        { name = 'camo_finish8', label = TranslateCap('component_camo_finish8'), hash = `COMPONENT_COMBATMG_MK2_CAMO_08` },
+        { name = 'camo_finish9', label = TranslateCap('component_camo_finish9'), hash = `COMPONENT_COMBATMG_MK2_CAMO_09` },
+        { name = 'camo_finish10', label = TranslateCap('component_camo_finish10'), hash = `COMPONENT_COMBATMG_MK2_CAMO_10` },
+        { name = 'camo_finish11', label = TranslateCap('component_camo_finish11'), hash = `COMPONENT_COMBATMG_MK2_CAMO_IND_01` },
+      },
+    },
+    {
+      name = 'WEAPON_COMBATPDW',
+      label = TranslateCap('weapon_combatpdw'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SMG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_COMBATPDW_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_COMBATPDW_CLIP_02` },
+        { name = 'clip_drum', label = TranslateCap('component_clip_drum'), hash = `COMPONENT_COMBATPDW_CLIP_03` },
+        { name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH` },
+        { name = 'grip', label = TranslateCap('component_grip'), hash = `COMPONENT_AT_AR_AFGRIP` },
+        { name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_SMALL` },
+      },
+    },
+    {
+      name = 'WEAPON_GUSENBERG',
+      label = TranslateCap('weapon_gusenberg'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_GUSENBERG_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_GUSENBERG_CLIP_02` },
+      },
+    },
+    {
+      name = 'WEAPON_MACHINEPISTOL',
+      label = TranslateCap('weapon_machinepistol'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_PISTOL` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_MACHINEPISTOL_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_MACHINEPISTOL_CLIP_02` },
+        { name = 'clip_drum', label = TranslateCap('component_clip_drum'), hash = `COMPONENT_MACHINEPISTOL_CLIP_03` },
+        { name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_PI_SUPP` },
+      },
+    },
+    {
+      name = 'WEAPON_MG',
+      label = TranslateCap('weapon_mg'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_MG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_MG_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_MG_CLIP_02` },
+        { name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_SMALL_02` },
+        { name = 'luxary_finish', label = TranslateCap('component_luxary_finish'), hash = `COMPONENT_MG_VARMOD_LOWRIDER` },
+      },
+    },
+    {
+      name = 'WEAPON_MICROSMG',
+      label = TranslateCap('weapon_microsmg'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SMG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_MICROSMG_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_MICROSMG_CLIP_02` },
+        { name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_PI_FLSH` },
+        { name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_MACRO` },
+        { name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_AR_SUPP_02` },
+        { name = 'luxary_finish', label = TranslateCap('component_luxary_finish'), hash = `COMPONENT_MICROSMG_VARMOD_LUXE` },
+      },
+    },
+    {
+      name = 'WEAPON_MINISMG',
+      label = TranslateCap('weapon_minismg'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SMG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_MINISMG_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_MINISMG_CLIP_02` },
+      },
+    },
+    {
+      name = 'WEAPON_SMG',
+      label = TranslateCap('weapon_smg'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SMG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_SMG_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_SMG_CLIP_02` },
+        { name = 'clip_drum', label = TranslateCap('component_clip_drum'), hash = `COMPONENT_SMG_CLIP_03` },
+        { name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH` },
+        { name = 'scope', label = TranslateCap('component_scope'), hash = `COMPONENT_AT_SCOPE_MACRO_02` },
+        { name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_PI_SUPP` },
+        { name = 'luxary_finish', label = TranslateCap('component_luxary_finish'), hash = `COMPONENT_SMG_VARMOD_LUXE` },
+      },
+    },
+    {
+      name = 'WEAPON_SMG_MK2',
+      label = TranslateCap('weapon_smg_mk2'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SMG` },
+      tints = weaponTints.mk2_weapon_tints,
+      components = {
+        { name = 'clip_default', label = TranslateCap('component_clip_default'), hash = `COMPONENT_SMG_MK2_CLIP_01` },
+        { name = 'clip_extended', label = TranslateCap('component_clip_extended'), hash = `COMPONENT_SMG_MK2_CLIP_02` },
+        { name = 'ammo_tracer', label = TranslateCap('component_ammo_tracer'), hash = `COMPONENT_SMG_MK2_CLIP_TRACER` },
+        { name = 'ammo_incendiary', label = TranslateCap('component_ammo_incendiary'), hash = `COMPONENT_SMG_MK2_CLIP_INCENDIARY` },
+        { name = 'ammo_hollowpoint', label = TranslateCap('component_ammo_hollowpoint'), hash = `COMPONENT_SMG_MK2_CLIP_HOLLOWPOINT` },
+        { name = 'ammo_fmj', label = TranslateCap('component_ammo_fmj'), hash = `COMPONENT_SMG_MK2_CLIP_FMJ` },
+        { name = 'flashlight', label = TranslateCap('component_flashlight'), hash = `COMPONENT_AT_AR_FLSH` },
+        { name = 'scope_holo', label = TranslateCap('component_scope_holo'), hash = `COMPONENT_AT_SIGHTS_SMG` },
+        { name = 'scope_small', label = TranslateCap('component_scope_small'), hash = `COMPONENT_AT_SCOPE_MACRO_02_SMG_MK2` },
+        { name = 'scope_medium', label = TranslateCap('component_scope_medium'), hash = `COMPONENT_AT_SCOPE_SMALL_SMG_MK2` },
+        { name = 'suppressor', label = TranslateCap('component_suppressor'), hash = `COMPONENT_AT_PI_SUPP` },
+        { name = 'muzzle_flat', label = TranslateCap('component_muzzle_flat'), hash = `COMPONENT_AT_MUZZLE_01` },
+        { name = 'muzzle_tactical', label = TranslateCap('component_muzzle_tactical'), hash = `COMPONENT_AT_MUZZLE_02` },
+        { name = 'muzzle_fat', label = TranslateCap('component_muzzle_fat'), hash = `COMPONENT_AT_MUZZLE_03` },
+        { name = 'muzzle_precision', label = TranslateCap('component_muzzle_precision'), hash = `COMPONENT_AT_MUZZLE_04` },
+        { name = 'muzzle_heavy', label = TranslateCap('component_muzzle_heavy'), hash = `COMPONENT_AT_MUZZLE_05` },
+        { name = 'muzzle_slanted', label = TranslateCap('component_muzzle_slanted'), hash = `COMPONENT_AT_MUZZLE_06` },
+        { name = 'muzzle_split', label = TranslateCap('component_muzzle_split'), hash = `COMPONENT_AT_MUZZLE_07` },
+        { name = 'barrel_default', label = TranslateCap('component_barrel_default'), hash = `COMPONENT_AT_SB_BARREL_01` },
+        { name = 'barrel_heavy', label = TranslateCap('component_barrel_heavy'), hash = `COMPONENT_AT_SB_BARREL_02` },
+        { name = 'camo_finish', label = TranslateCap('component_camo_finish'), hash = `COMPONENT_SMG_MK2_CAMO` },
+        { name = 'camo_finish2', label = TranslateCap('component_camo_finish2'), hash = `COMPONENT_SMG_MK2_CAMO_02` },
+        { name = 'camo_finish3', label = TranslateCap('component_camo_finish3'), hash = `COMPONENT_SMG_MK2_CAMO_03` },
+        { name = 'camo_finish4', label = TranslateCap('component_camo_finish4'), hash = `COMPONENT_SMG_MK2_CAMO_04` },
+        { name = 'camo_finish5', label = TranslateCap('component_camo_finish5'), hash = `COMPONENT_SMG_MK2_CAMO_05` },
+        { name = 'camo_finish6', label = TranslateCap('component_camo_finish6'), hash = `COMPONENT_SMG_MK2_CAMO_06` },
+        { name = 'camo_finish7', label = TranslateCap('component_camo_finish7'), hash = `COMPONENT_SMG_MK2_CAMO_07` },
+        { name = 'camo_finish8', label = TranslateCap('component_camo_finish8'), hash = `COMPONENT_SMG_MK2_CAMO_08` },
+        { name = 'camo_finish9', label = TranslateCap('component_camo_finish9'), hash = `COMPONENT_SMG_MK2_CAMO_09` },
+        { name = 'camo_finish10', label = TranslateCap('component_camo_finish10'), hash = `COMPONENT_SMG_MK2_CAMO_10` },
+        { name = 'camo_finish11', label = TranslateCap('component_camo_finish11'), hash = `COMPONENT_SMG_MK2_CAMO_IND_01` },
+      },
+    },
+    {
+      name = 'WEAPON_RAYCARBINE',
+      label = TranslateCap('weapon_raycarbine'),
+      ammo = { label = TranslateCap('ammo_rounds'), hash = `AMMO_SMG` },
+      tints = weaponTints.default_weapon_tints,
+      components = {},
+    },
+  }
+end
