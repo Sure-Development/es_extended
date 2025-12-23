@@ -191,7 +191,7 @@ return function(identifier, source, isNew)
 
   TriggerEvent('esx:playerLoaded', source, isNew)
 
-  --- Cleanup before sent to client
+  --- Cleanup before send to client
   userData.inventoryServer = nil
   userData.identifier = nil
   userData.dateofbirth = nil
