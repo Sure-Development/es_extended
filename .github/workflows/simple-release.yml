@@ -1,42 +1,44 @@
-name: Simple Release
+name: Create Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      versionNumber:
-        description: 'Version Number'
-        required: false
-        default: ''
-      zipName:
-        description: 'Zip Name'
-        required: true
-        default: 'es_extended-dogeaterx'
-      web:
-        description: 'Web'
-        required: false
-        default: 'false'
-      excludeOptions:
-          type: string
-          description: Separate the files or folders that you do not want to see in the release with a comma. 
-          required: false
-          default: 'node_modules,package.json,package-lock.json'
-      neededNewBranch:
-          type: string
-          description: Specify true or false if you want to create a new branch.
-          required: false
-      fxmanifestPath:
-          type: string
-          description: Specify fxmanifest path if fxmanifest is not in the root folder.
-          required: false
-          default: 'fxmanifest.lua'
+  push:
+    branches:
+      - main
 
 jobs:
-  simple-create-release:
-    uses: esx-framework/.github/.github/workflows/simple-release.yml@main
-    with:
-      zipName: ${{ github.event.inputs.zipName }}
-      web: ${{ github.event.inputs.web }}
-      versionNumber: ${{ github.event.inputs.versionNumber }}
-      excludeOptions: ${{ github.event.inputs.excludeOptions }}
-      neededNewBranch: ${{ github.event.inputs.neededNewBranch }}
-      fxmanifestPath: ${{ github.events.inputs.fxmanifestPath }}
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get version from fxmanifest.lua
+        id: get_version
+        shell: bash
+        run: |
+          version=$(grep "git_version" fxmanifest.lua | awk -F"'" '{print $2}')
+          echo "Found version: $version"
+          if [ ! -z "$version" ]; then
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+          else
+            echo "Error: Version not found in fxmanifest.lua"
+            exit 1
+          fi
+
+      - name: Create ZIP archive
+        run: |
+          zip -r es_extended-dogeaterx.zip . -x ".git/*" ".github/*" "*.md" "LICENSE"
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "es_extended-dogeaterx.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          generateReleaseNotes: true
+          tag: v${{ steps.get_version.outputs.version }}
+          name: "Release v${{ steps.get_version.outputs.version }}"
