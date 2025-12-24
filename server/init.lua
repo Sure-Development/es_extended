@@ -28,8 +28,6 @@ Core.DatabaseConnected = false
 Core.PlayersByIdentifier = {}
 Core.JobsLoaded = false
 Core.IdsByJobs = {}
-Core.Tokens = {}
-Core.UserDatas = {}
 
 --- Bootstrap
 require('server.functions')
