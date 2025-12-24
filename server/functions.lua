@@ -54,7 +54,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
   end
 
   if Core.RegisteredCommands[name] then
-    print(('[^3WARNING^7] Command ^5 %s ^7already registered, overriding command'):format(name))
+    lib.print.warn(('[^3WARNING^7] Command ^5 %s ^7already registered, overriding command'):format(name))
 
     if Core.RegisteredCommands[name].suggestion then
       TriggerClientEvent('chat:removeSuggestion', -1, ('/%s'):format(name))
@@ -78,7 +78,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
     local command = Core.RegisteredCommands[name]
 
     if not command.allowConsole and playerId == 0 then
-      print(('[^3WARNING^7] ^5%s^0'):format(TranslateCap('commanderror_console')))
+      lib.print.warn(('[^3WARNING^7] ^5%s^0'):format(TranslateCap('commanderror_console')))
     else
       local xPlayer, error = ESX.Players[playerId], nil
 
@@ -305,7 +305,7 @@ function Core.SavePlayers(cb)
         return cb()
       end
 
-      print(
+      lib.print.info(
         ('[^2INFO^7] Saved ^5%s^7 %s over ^5%s^7 ms'):format(
           #parameters,
           #parameters > 1 and 'players' or 'player',
@@ -503,14 +503,14 @@ function ESX.RefreshJobs()
     if Jobs[v.job_name] then
       Jobs[v.job_name].grades[tostring(v.grade)] = v
     else
-      print(('[^3WARNING^7] Ignoring job grades for ^5 %s ^0 due to missing job'):format(v.job_name))
+      lib.print.warn(('[^3WARNING^7] Ignoring job grades for ^5 %s ^0 due to missing job'):format(v.job_name))
     end
   end
 
   for _, v in pairs(Jobs) do
     if ESX.Table.SizeOf(v.grades) == 0 then
       Jobs[v.name] = nil
-      print(('[^3WARNING^7] Ignoring job ^5 %s ^0 due to no job grades found'):format(v.name))
+      lib.print.warn(('[^3WARNING^7] Ignoring job ^5 %s ^0 due to no job grades found'):format(v.name))
     end
   end
 
@@ -547,12 +547,12 @@ function ESX.UseItem(source, item, ...)
       local success, result = pcall(itemCallback, source, item, ...)
 
       if not success then
-        return result and print(result)
-          or print(('[^3WARNING^7] An error occured when using item ^5 %s ^7! This was not caused by ESX.'):format(item))
+        return result and lib.print.info(result)
+          or lib.print.warn(('[^3WARNING^7] An error occured when using item ^5 %s ^7! This was not caused by ESX.'):format(item))
       end
     end
   else
-    print(('[^3WARNING^7] Item ^5 %s ^7 was used but does not exist!'):format(item))
+    lib.print.warn(('[^3WARNING^7] Item ^5 %s ^7 was used but does not exist!'):format(item))
   end
 end
 
@@ -563,7 +563,7 @@ function ESX.GetItemLabel(item)
   if ESX.Items[item] then
     return ESX.Items[item].label
   else
-    print(('[^3WARNING^7] Attemting to get invalid Item -> ^5%s^7'):format(item))
+    lib.print.warn(('[^3WARNING^7] Attemting to get invalid Item -> ^5%s^7'):format(item))
   end
 end
 
