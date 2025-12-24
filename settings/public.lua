@@ -34,6 +34,11 @@ PUBLIC.accounts = {
   },
 }
 
+--- เปิดการใช้งานข้อมูลแบบ Hybrid สำหรับ PlayerData, Inventory | Accounts | Loadout ฝั่ง Client
+--- สามารถ Loop ipairs เพื่อรองรับการหาข้อมูลแบบเดิมได้ หรือเข้าถึงข้อมูลด้วย Hash Table ESX.PlayerData.inventory['itemName']
+---@type boolean
+PUBLIC.hybrid_data = true
+
 --- กำหนดของเริ่มต้น
 ---@class Settings.Public.Starter
 ---@field accounts table<string, integer> [ชื่อบัญชี] = จำนวนเงิน

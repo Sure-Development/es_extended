@@ -11,6 +11,8 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
+local public = require('settings.public')
+
 local M = {
   adjustment = require('client.modules.adjustments'),
   death = require('client.modules.death'),
@@ -53,24 +55,42 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
     }
   end
 
+  local itemIndex = 0
   ---@type table<string, DEX.Item>
   local newInventory = {}
   for name, item in pairs(Core.Items) do
+    itemIndex += 1
     newInventory[name] = item
     newInventory[name].count = (inventoryServerCount[name] or { count = 0 }).count or 0
     newInventory[name].usable = (inventoryServerCount[name] or { usable = false }).usable or false
+
+    if public.hybrid_data then
+      newInventory[itemIndex] = newInventory[name]
+    end
   end
 
+  local accountIndex = 0
   ---@type table<string, DEX.Account>
   local newAccounts = {}
   for _, account in ipairs(xPlayer.accounts) do
+    accountIndex += 1
     newAccounts[account.name] = account
+
+    if public.hybrid_data then
+      newAccounts[accountIndex] = account
+    end
   end
 
+  local loadoutIndex = 0
   ---@type table<string, DEX.Loadout>
   local newLoadout = {}
   for _, weapon in ipairs(xPlayer.loadout) do
+    loadoutIndex += 1
     newLoadout[weapon.name] = weapon
+
+    if public.hybrid_data then
+      newLoadout[loadoutIndex] = weapon
+    end
   end
 
   ESX.PlayerData.inventory = lib.table.deepclone(newInventory)
@@ -206,6 +226,15 @@ RegisterNetEvent('esx:setAccountMoney', function(account)
     ESX.PlayerData.accounts[account.name] = account
   end)
 
+  if public.hybrid_data then
+    for k, v in ipairs(ESX.PlayerData.accounts) do
+      if v.name == account.name then
+        ESX.PlayerData.accounts[k] = account
+        break
+      end
+    end
+  end
+
   if not retval then
     lib.print.error(('Error during esx:addInventoryItem %s'):format(json.encode(account)))
     return
@@ -235,6 +264,15 @@ RegisterNetEvent('esx:addInventoryItem', function(item, count)
     ESX.PlayerData.inventory[item].count = count
   end)
 
+  if public.hybrid_data then
+    for k, v in ipairs(ESX.PlayerData.inventory) do
+      if v.name == item then
+        ESX.PlayerData.inventory[k].count = count
+        break
+      end
+    end
+  end
+
   if not retval then
     lib.print.error(('Error during esx:addInventoryItem %s %s'):format(item, count))
   end
@@ -245,21 +283,40 @@ RegisterNetEvent('esx:removeInventoryItem', function(item, count)
     ESX.PlayerData.inventory[item].count = count
   end)
 
+  if public.hybrid_data then
+    for k, v in ipairs(ESX.PlayerData.inventory) do
+      if v.name == item then
+        ESX.PlayerData.inventory[k].count = count
+        break
+      end
+    end
+  end
+
   if not retval then
     lib.print.error(('Error during esx:removeInventoryItem %s %s'):format(item, count))
   end
 end)
 
 RegisterNetEvent('esx:addLoadoutItem', function(weaponName, weaponLabel, ammo)
+  local data = {
+    name = weaponName,
+    ammo = ammo,
+    label = weaponLabel,
+    components = {},
+    tintIndex = 0,
+  }
   local retval = pcall(function()
-    ESX.PlayerData.loadout[weaponName] = {
-      name = weaponName,
-      ammo = ammo,
-      label = weaponLabel,
-      components = {},
-      tintIndex = 0,
-    }
+    ESX.PlayerData.loadout[weaponName] = data
   end)
+
+  if public.hybrid_data then
+    for _, v in ipairs(ESX.PlayerData.loadout) do
+      if v.name == weaponName then
+        ESX.PlayerData.loadout[#ESX.PlayerData.loadout + 1] = data
+        break
+      end
+    end
+  end
 
   if not retval then
     lib.print.error(('Error during esx:addLoadoutItem %s %s %s'):format(weaponName, weaponLabel, ammo))
@@ -273,6 +330,15 @@ RegisterNetEvent('esx:removeLoadoutItem', function(weaponName, weaponLabel)
   local retval = pcall(function()
     ESX.PlayerData.loadout[weaponName] = nil
   end)
+
+  if public.hybrid_data then
+    for k, v in ipairs(ESX.PlayerData.loadout) do
+      if v.name == weaponName then
+        table.remove(ESX.PlayerData.loadout, k)
+        break
+      end
+    end
+  end
 
   if not retval then
     lib.print.error(('Error during esx:addLoadoutItem %s %s'):format(weaponName, weaponLabel))
