@@ -87,9 +87,7 @@ AddEventHandler('playerDropped', function(reason)
   playerDrop(source, reason)
 end)
 
-AddEventHandler('esx:playerLoaded', function(playerId)
-  local xPlayer = ESX.GetPlayerFromId(playerId)
-
+AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
   if xPlayer then
     local job = xPlayer:getJob().name
     local jobKey = ('%s:count'):format(job)

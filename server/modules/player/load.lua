@@ -11,13 +11,59 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
----@type string
-local webBase = nil
-
 ---@class DEX.Player : ExtendedPlayer
 local player = require('server.classes.player')
 local public = require('settings.public')
 local orm = require('server.classes.orm')
+
+local mapKeyMethods = {
+  job = 'getJob',
+  source = 'getSource',
+  playerId = 'getSource',
+  group = 'getGroup',
+  identifier = 'getIdentifier',
+  license = 'getIdentifier',
+  metadata = 'getMetadata',
+  accounts = 'getAccounts',
+  inventory = 'getInventory',
+  loadout = 'getLoadout',
+  admin = 'isAdmin',
+  name = 'getName',
+  coords = 'getCoords',
+}
+
+---@class (functions) DEX.Player.Functions : DEX.Player
+---@param src number
+---@return DEX.Player.Functions
+local function createStaticPlayer(src)
+  return setmetatable({ src = src }, {
+    __index = function(self, key)
+      if mapKeyMethods[key] then
+        local methodName = mapKeyMethods[key]
+        return exports.es_extended:runStaticPlayerMethod(self.src, methodName)
+      end
+
+      return function(...)
+        return exports.es_extended:runStaticPlayerMethod(self.src, key, ...)
+      end
+    end,
+  })
+end
+
+---@param src number|string
+---@return DEX.Player.Functions?
+local function GetPlayer(src)
+  if type(src) ~= 'number' then
+    src = ESX.GetPlayerIdFromIdentifier(src)
+    if not src then
+      return
+    end
+  elseif not ESX.IsPlayerLoaded(src) then
+    return
+  end
+
+  return createStaticPlayer(src)
+end
 
 ---@param identifier string
 ---@param source integer
@@ -204,7 +250,7 @@ return function(identifier, source, isNew)
   userData.metadata = nil
   userData.group = nil
 
-  xPlayer:triggerEvent('esx:playerLoaded', userData, isNew)
+  xPlayer:triggerEvent('esx:playerLoaded', userData, GetPlayer(source), isNew)
   xPlayer:triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
 
   lib.print.info(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer:getName(), source))
