@@ -12,4 +12,4 @@
 <br>
 
 <p align=center>Modern-first framework for developing FiveM Server</p>
-<p align=center><strong>Version</strong>: 2.0.0-pitbull-beta-0.4.2</p>
+<p align=center><strong>Version</strong>: 2.0.0-pitbull-beta-0.5.2</p>
