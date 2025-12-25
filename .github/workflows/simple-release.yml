@@ -54,7 +54,7 @@ jobs:
           artifacts: "es_extended-dogeaterx.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: v${{ steps.get_version.outputs.version }}
-          name: "Version ${{ steps.get_version.outputs.version }}"
+          name: "${{ steps.get_version.outputs.version }}"
           body: |
             ## 📝 What's changes in this version
             ${{ steps.changelog.outputs.logs }}
