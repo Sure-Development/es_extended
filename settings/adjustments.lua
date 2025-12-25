@@ -54,6 +54,31 @@ ADJUSTMENT.enable_pvp = true
 ---@type boolean
 ADJUSTMENT.enable_wanted_level = false
 
+--- เปิดการกระทำต่าง ๆ ที่เป็นพื้นฐานของผู้เล่น
+---@class Settings.Adjustment.BasicActions
+---@field disable_motor_helmet boolean ปิดการใส่หมวกตัวเกม
+---@field disable_idle_camera boolean ปิดจอ AFK
+---@field player_crouch boolean เปิดการนั่งของผู้เล่น CNTL
+---@field player_handsup boolean เปิดการยกมือของผู้เล่น X
+---@field player_finger_pointing boolean เปิดการชี้ของผู้เล่น B
+---@field player_injured { enabled: boolean, below: integer } เปิดเมื่อผู้เล่นเลือดต่ำจะให้ขากะเผลก
+---@field player_slide { enabled: boolean, delay: integer } เปิดให้ผู้เล่นสไลด์
+ADJUSTMENT.basic_actions = {
+  disable_motor_helmet = true,
+  disable_idle_camera = true,
+  player_crouch = true,
+  player_handsup = true,
+  player_finger_pointing = true,
+  player_injured = {
+    enabled = true,
+    below = 149,
+  },
+  player_slide = {
+    enabled = true,
+    delay = 10000,
+  },
+}
+
 --- ตั้งค่าเปิด/ปิด GTAV HUD
 ---@type table<integer, boolean>
 ADJUSTMENT.remove_hud_components = {

@@ -251,6 +251,37 @@ function M:Multipliers()
   end)
 end
 
+function M:BasicActions()
+  local actions = adjustment.basic_actions
+  if actions.disable_motor_helmet then
+    require('client.modules.adjustments.basic-actions.disable_motor_helmet')
+  end
+
+  if actions.disable_idle_camera then
+    require('client.modules.adjustments.basic-actions.disable_idle_camera')
+  end
+
+  if actions.player_crouch then
+    require('client.modules.adjustments.basic-actions.player_crouch')
+  end
+
+  if actions.player_handsup then
+    require('client.modules.adjustments.basic-actions.player_handsup')
+  end
+
+  if actions.player_finger_pointing then
+    require('client.modules.adjustments.basic-actions.player_finger_pointing')
+  end
+
+  if actions.player_injured and actions.player_injured.enabled then
+    require('client.modules.adjustments.basic-actions.player_injured')(actions.player_injured.below)
+  end
+
+  if actions.player_slide and actions.player_slide.enabled then
+    require('client.modules.adjustments.basic-actions.player_slide')(actions.player_slide.delay)
+  end
+end
+
 function M:Load()
   self:RemoveHudComponents()
   self:DisableAimAssist()
@@ -265,6 +296,7 @@ function M:Load()
   self:WantedLevel()
   self:DisableRadio()
   self:Multipliers()
+  self:BasicActions()
 end
 
 return M
