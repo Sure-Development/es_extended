@@ -11,12 +11,12 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
-require('client.functions.services.callback')
-require('client.functions.services.player-data')
-require('client.functions.services.spawn')
-require('client.functions.services.notification')
+require('client.functions.services.callbacks')
+require('client.functions.services.player-datas')
+require('client.functions.services.spawns')
+require('client.functions.services.notifications')
 require('client.functions.services.ui')
-require('client.functions.services.game')
+require('client.functions.services.games')
 
 RegisterNetEvent('esx:showNotification', ESX.ShowNotification)
 
