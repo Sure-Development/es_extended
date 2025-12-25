@@ -3,5 +3,9 @@
   "editor.defaultFormatter": "JohnnyMorganz.stylua",
   "editor.indentSize": "tabSize",
   "editor.tabSize": 2,
-  "Lua.runtime.version": "Lua 5.4"
+  "Lua.runtime.version": "Lua 5.4",
+  "Lua.workspace.library": [
+    "E:\\VSCode-Exts",
+    "C:\\Users\\mysbryce\\AppData\\Roaming\\Code\\User\\globalStorage\\overextended.cfxlua-vscode\\library"
+  ]
 }
