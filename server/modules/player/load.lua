@@ -36,23 +36,21 @@ local mapKeyMethods = {
 ---@param src number
 ---@return DEX.Player.Functions
 local function createStaticPlayer(src)
-  return setmetatable({ src = src }, {
-    __index = function(self, key)
-      if mapKeyMethods[key] then
-        local methodName = mapKeyMethods[key]
-        return exports.es_extended:runStaticPlayerMethod(self.src, methodName)
-      end
+  local self = {}
 
-      return function(...)
-        return exports.es_extended:runStaticPlayerMethod(self.src, key, ...)
-      end
-    end,
-  })
+  self.source = src
+  for _, method in pairs(mapKeyMethods) do
+    self[method] = function(...)
+      return exports.es_extended:runStaticPlayerMethod(self.source, method, ...)
+    end
+  end
+
+  return self
 end
 
 ---@param src number|string
 ---@return DEX.Player.Functions?
-local function GetPlayer(src)
+local function GetPlayerExtended(src)
   if type(src) ~= 'number' then
     src = ESX.GetPlayerIdFromIdentifier(src)
     if not src then
@@ -150,14 +148,6 @@ return function(identifier, source, isNew)
     end
   end
 
-  table.sort(userData.inventoryServer, function(a, b)
-    return a.label < b.label
-  end)
-
-  table.sort(userData.inventoryClient, function(a, b)
-    return a.label < b.label
-  end)
-
   if result.group then
     if result.group == 'superadmin' then
       userData.group = 'admin'
@@ -175,7 +165,7 @@ return function(identifier, source, isNew)
       local label = ESX.GetWeaponLabel(name)
 
       if label then
-        userData.loadout[#userData.loadout + 1] = {
+        userData.loadout[name] = {
           name = name,
           ammo = weapon.ammo,
           label = label,
@@ -235,7 +225,9 @@ return function(identifier, source, isNew)
   userData.money = xPlayer:getMoney()
   userData.variables = xPlayer.variables or {}
 
-  TriggerEvent('esx:playerLoaded', source, isNew)
+  local extendedPlayer = GetPlayerExtended(source)
+  print(extendedPlayer.getJob().name)
+  TriggerEvent('esx:playerLoaded', source, extendedPlayer, isNew)
 
   --- Cleanup before send to client
   userData.inventoryServer = nil
@@ -250,7 +242,7 @@ return function(identifier, source, isNew)
   userData.metadata = nil
   userData.group = nil
 
-  xPlayer:triggerEvent('esx:playerLoaded', userData, GetPlayer(source), isNew)
+  xPlayer:triggerEvent('esx:playerLoaded', userData, isNew)
   xPlayer:triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
 
   lib.print.info(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer:getName(), source))
