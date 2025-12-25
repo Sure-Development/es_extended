@@ -226,7 +226,6 @@ return function(identifier, source, isNew)
   userData.variables = xPlayer.variables or {}
 
   local extendedPlayer = GetPlayerExtended(source)
-  print(extendedPlayer.getJob().name)
   TriggerEvent('esx:playerLoaded', source, extendedPlayer, isNew)
 
   --- Cleanup before send to client
