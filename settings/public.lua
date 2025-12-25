@@ -36,7 +36,10 @@ PUBLIC.accounts = {
 
 --- เปิดการใช้งานข้อมูลแบบ Hybrid สำหรับ PlayerData, Inventory | Accounts | Loadout ฝั่ง Client
 --- สามารถ Loop ipairs เพื่อรองรับการหาข้อมูลแบบเดิมได้ หรือเข้าถึงข้อมูลด้วย Hash Table ESX.PlayerData.inventory['itemName']
----@type boolean
+---@alias Settings.Public.HybridType
+---| boolean ใช้งานทั้งคู่
+---| 'hash' ใช้งานแบบ Hash อย่างเดียว
+---| 'numeric' ใช้งานแบบ Numeric (Compatible with old ESX)
 PUBLIC.hybrid_data = true
 
 --- กำหนดของเริ่มต้น

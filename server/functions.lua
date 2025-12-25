@@ -604,8 +604,10 @@ local function refreshPlayerInventories()
     end
 
     xPlayer.inventory = {}
+    local itemIndex = 0
     for itemName, itemData in pairs(ESX.Items) do
-      xPlayer.inventory[itemName] = {
+      itemIndex += 1
+      xPlayer.inventory[itemIndex] = {
         name = itemName,
         count = minimalInv[itemName] or 0,
         limit = itemData.limit,

@@ -54,28 +54,37 @@ end
 ---@return table<string, number | DEX.Item> | number?
 function ESX.SearchInventory(items, count)
   local inventory = ESX.PlayerData.inventory
+  local isString = type(items) == 'string'
+  local searchItems = isString and { items } or items
+  local results = {}
 
-  if type(items) == 'string' then
-    local itemData = inventory[items]
-    if not itemData then
-      return count and 0 or nil
+  local function findItem(itemName)
+    if inventory[itemName] then
+      return inventory[itemName]
     end
-    return count and itemData.count or itemData
+
+    for i = 1, #inventory do
+      local item = inventory[i]
+      if item and item.name == itemName then
+        return item
+      end
+    end
+
+    return nil
   end
 
-  local data = {}
-  for i = 1, #items do
-    local name = items[i]
-    local itemData = inventory[name]
+  for i = 1, #searchItems do
+    local name = searchItems[i]
+    local itemData = findItem(name)
 
-    if itemData then
-      data[name] = count and itemData.count or itemData
-    else
-      data[name] = count and 0 or nil
+    if isString then
+      return count and (itemData and itemData.count or 0) or itemData
     end
+
+    results[name] = count and (itemData and itemData.count or 0) or itemData
   end
 
-  return data
+  return results
 end
 
 ---@param key string Table key to set

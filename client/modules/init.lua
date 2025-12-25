@@ -32,6 +32,8 @@ for _, watcher in ipairs(watchers) do
   end)
 end
 
+local hybridType = public.hybrid_data
+
 RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
   local tries = 0
   repeat
@@ -60,12 +62,17 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
   local newInventory = {}
   for name, item in pairs(Core.Items) do
     itemIndex += 1
-    newInventory[name] = item
-    newInventory[name].count = (inventoryServerCount[name] or { count = 0 }).count or 0
-    newInventory[name].usable = (inventoryServerCount[name] or { usable = false }).usable or false
+    local itemData = lib.table.deepclone(item)
+    itemData.count = (inventoryServerCount[name] or { count = 0 }).count or 0
+    itemData.usable = (inventoryServerCount[name] or { usable = false }).usable or false
 
-    if public.hybrid_data then
-      newInventory[itemIndex] = newInventory[name]
+    if hybridType == true then
+      newInventory[name] = itemData
+      newInventory[itemIndex] = itemData
+    elseif hybridType == 'hash' then
+      newInventory[name] = itemData
+    elseif hybridType == 'numeric' then
+      newInventory[itemIndex] = itemData
     end
   end
 
@@ -74,9 +81,13 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
   local newAccounts = {}
   for _, account in ipairs(xPlayer.accounts) do
     accountIndex += 1
-    newAccounts[account.name] = account
 
-    if public.hybrid_data then
+    if hybridType == true then
+      newAccounts[account.name] = account
+      newAccounts[accountIndex] = account
+    elseif hybridType == 'hash' then
+      newAccounts[account.name] = account
+    elseif hybridType == 'numeric' then
       newAccounts[accountIndex] = account
     end
   end
@@ -86,9 +97,13 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
   local newLoadout = {}
   for _, weapon in ipairs(xPlayer.loadout) do
     loadoutIndex += 1
-    newLoadout[weapon.name] = weapon
 
-    if public.hybrid_data then
+    if hybridType == true then
+      newLoadout[weapon.name] = weapon
+      newLoadout[loadoutIndex] = weapon
+    elseif hybridType == 'hash' then
+      newLoadout[weapon.name] = weapon
+    elseif hybridType == 'numeric' then
       newLoadout[loadoutIndex] = weapon
     end
   end
@@ -142,7 +157,20 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
   lib.print.info('Player has initialized')
 end)
 
-RegisterNetEvent('esx:setInventory', function(newInventory)
+RegisterNetEvent('esx:setInventory', function(_newInventory)
+  local newInventory = {}
+
+  for index, item in ipairs(_newInventory) do
+    if hybridType == true then
+      newInventory[index] = item
+      newInventory[item.name] = item
+    elseif hybridType == 'hash' then
+      newInventory[item.name] = item
+    elseif hybridType == 'numeric' then
+      newInventory[index] = item
+    end
+  end
+
   ESX.SetPlayerData('inventory', newInventory)
 end)
 
@@ -168,7 +196,7 @@ AddEventHandler('esx:restoreLoadout', function()
   local ammoTypes = {}
   RemoveAllPedWeapons(cache.ped, true)
 
-  for _, v in ipairs(ESX.PlayerData.loadout) do
+  for _, v in pairs(ESX.PlayerData.loadout) do
     local weaponName = v.name
     local weaponHash = joaat(weaponName)
 
@@ -222,11 +250,14 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
 end)
 
 RegisterNetEvent('esx:setAccountMoney', function(account)
-  local retval = pcall(function()
-    ESX.PlayerData.accounts[account.name] = account
-  end)
+  local retval = true
+  if hybridType == true or hybridType == 'hash' then
+    retval = pcall(function()
+      ESX.PlayerData.accounts[account.name] = account
+    end)
+  end
 
-  if public.hybrid_data then
+  if hybridType == true or hybridType == 'numeric' then
     for k, v in ipairs(ESX.PlayerData.accounts) do
       if v.name == account.name then
         ESX.PlayerData.accounts[k] = account
@@ -260,11 +291,15 @@ RegisterNetEvent('esx:registerSuggestions', function(registeredCommands)
 end)
 
 RegisterNetEvent('esx:addInventoryItem', function(item, count)
-  local retval = pcall(function()
-    ESX.PlayerData.inventory[item].count = count
-  end)
+  local retval = true
 
-  if public.hybrid_data then
+  if hybridType == true or hybridType == 'hash' then
+    retval = pcall(function()
+      ESX.PlayerData.inventory[item].count = count
+    end)
+  end
+
+  if hybridType == true or hybridType == 'numeric' then
     for k, v in ipairs(ESX.PlayerData.inventory) do
       if v.name == item then
         ESX.PlayerData.inventory[k].count = count
@@ -279,11 +314,15 @@ RegisterNetEvent('esx:addInventoryItem', function(item, count)
 end)
 
 RegisterNetEvent('esx:removeInventoryItem', function(item, count)
-  local retval = pcall(function()
-    ESX.PlayerData.inventory[item].count = count
-  end)
+  local retval = true
 
-  if public.hybrid_data then
+  if hybridType == true or hybridType == 'hash' then
+    retval = pcall(function()
+      ESX.PlayerData.inventory[item].count = count
+    end)
+  end
+
+  if hybridType == true or hybridType == 'numeric' then
     for k, v in ipairs(ESX.PlayerData.inventory) do
       if v.name == item then
         ESX.PlayerData.inventory[k].count = count
@@ -305,11 +344,15 @@ RegisterNetEvent('esx:addLoadoutItem', function(weaponName, weaponLabel, ammo)
     components = {},
     tintIndex = 0,
   }
-  local retval = pcall(function()
-    ESX.PlayerData.loadout[weaponName] = data
-  end)
 
-  if public.hybrid_data then
+  local retval = true
+  if hybridType == true or hybridType == 'hash' then
+    retval = pcall(function()
+      ESX.PlayerData.loadout[weaponName] = data
+    end)
+  end
+
+  if hybridType == true or hybridType == 'numeric' then
     for _, v in ipairs(ESX.PlayerData.loadout) do
       if v.name == weaponName then
         ESX.PlayerData.loadout[#ESX.PlayerData.loadout + 1] = data
@@ -327,11 +370,15 @@ RegisterNetEvent('esx:addLoadoutItem', function(weaponName, weaponLabel, ammo)
 end)
 
 RegisterNetEvent('esx:removeLoadoutItem', function(weaponName, weaponLabel)
-  local retval = pcall(function()
-    ESX.PlayerData.loadout[weaponName] = nil
-  end)
+  local retval = true
 
-  if public.hybrid_data then
+  if hybridType == true or hybridType == 'hash' then
+    retval = pcall(function()
+      ESX.PlayerData.loadout[weaponName] = nil
+    end)
+  end
+
+  if hybridType == true or hybridType == 'numeric' then
     for k, v in ipairs(ESX.PlayerData.loadout) do
       if v.name == weaponName then
         table.remove(ESX.PlayerData.loadout, k)
