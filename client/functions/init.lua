@@ -71,7 +71,7 @@ local mismatchedTypes = {
   [`utillitruck3`] = 'automobile', -- trailer
 }
 
----@param model number|string
+---@param model number | string
 ---@return string | boolean
 function ESX.GetVehicleTypeClient(model)
   model = type(model) == 'string' and joaat(model) or model
