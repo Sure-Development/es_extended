@@ -36,3 +36,5 @@ AddEventHandler('esx:getSharedObject', function(cb)
     cb(ESX)
   end
 end)
+
+require('modules.optimize')
