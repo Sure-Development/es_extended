@@ -11,7 +11,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -24,9 +25,24 @@ jobs:
           if [ ! -z "$version" ]; then
             echo "version=$version" >> "$GITHUB_OUTPUT"
           else
-            echo "Error: Version not found in fxmanifest.lua"
+            echo "Error: Version not found"
             exit 1
           fi
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            LOG=$(git log --pretty=format:"- %s (%h)")
+          else
+            LOG=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"- %s (%h)")
+          fi
+          
+          echo "logs<<EOF" >> $GITHUB_OUTPUT
+          echo "$LOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create ZIP archive
         run: |
@@ -37,8 +53,10 @@ jobs:
         with:
           artifacts: "es_extended-dogeaterx.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: v${{ steps.get_version.outputs.version }}
+          name: "Version ${{ steps.get_version.outputs.version }}"
+          body: |
+            ## 📝 What's changes in this version
+            ${{ steps.changelog.outputs.logs }}
           draft: false
           prerelease: false
-          generateReleaseNotes: true
-          tag: v${{ steps.get_version.outputs.version }}
-          name: "${{ steps.get_version.outputs.version }}"
