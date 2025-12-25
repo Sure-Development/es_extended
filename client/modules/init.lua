@@ -145,7 +145,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
   NetworkSetLocalPlayerSyncLookAt(true)
 
   if ESX.PlayerData.metadata then
-    if ESX.PlayerData.metadata.isDead then
+    if ESX.PlayerData.metadata.isDead == 1 or ESX.PlayerData.metadata.isDead == true then
       SetEntityHealth(cache.ped, 0)
       LocalPlayer.state:set('isDead', true, true)
     else
