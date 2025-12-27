@@ -25,6 +25,12 @@ local isClient = not IsDuplicityVersion()
 
 local decors = {
   {
+    search = '@onNui{name}',
+    replace = function(name)
+      return 'RegisterNUICallback(' .. name .. ')'
+    end,
+  },
+  {
     search = '@onNet{name}',
     replace = function(name)
       return 'RegisterNetEvent(' .. name .. ')'
@@ -62,6 +68,12 @@ local decors = {
       end
 
       return 'AddEventHandler(\'' .. event .. '\', ' .. cb .. ')'
+    end,
+  },
+  {
+    search = '@emitNui{data}',
+    replace = function(data)
+      return 'SendNUIMessage(' .. data .. ')'
     end,
   },
   {
@@ -108,6 +120,12 @@ local decors = {
     search = '@emitCallback{data}',
     replace = function(data)
       return 'lib.callback.await(' .. data .. ')'
+    end,
+  },
+  {
+    search = '@onPlayerLoaded{cb}',
+    replace = function(cb)
+      return 'ESX.WaitForPlayerLoaded(' .. cb .. ')'
     end,
   },
 }

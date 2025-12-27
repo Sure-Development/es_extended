@@ -22,10 +22,21 @@ function ESX.GetPlayerData()
   return ESX.PlayerData
 end
 
-function ESX.WaitForPlayerLoaded()
-  while not ESX.IsPlayerLoaded() do
-    Wait(50)
+function ESX.WaitForPlayerLoaded(cb)
+  local thread = function(_cb)
+    _cb()
   end
+  if cb then
+    thread = CreateThread
+  end
+
+  thread(function()
+    while not ESX.IsPlayerLoaded() do
+      Wait(50)
+    end
+
+    cb()
+  end)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
