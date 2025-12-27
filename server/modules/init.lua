@@ -21,8 +21,8 @@ local registerCallback = lib.callback.register
 
 local oneSyncState = GetConvar('onesync', 'off')
 
-AddEventHandler('esx:onPlayerDropped', playerDrop)
-RegisterNetEvent('esx:onPlayerJoined', function()
+@on('esx:onPlayerDropped', playerDrop)
+@onNet('esx:onPlayerJoined', function()
   local source = source
   while not next(ESX.Jobs) do
     Wait(50)
@@ -33,7 +33,7 @@ RegisterNetEvent('esx:onPlayerJoined', function()
   end
 end)
 
-AddEventHandler('playerConnecting', function(_, _, deferrals)
+@on('playerConnecting', function(_, _, deferrals)
   local playerId = source
   deferrals.defer()
   Wait(0)
@@ -75,7 +75,7 @@ AddEventHandler('playerConnecting', function(_, _, deferrals)
   deferrals.done()
 end)
 
-AddEventHandler('chatMessage', function(playerId, _, message)
+@on('chatMessage', function(playerId, _, message)
   local xPlayer = ESX.GetPlayerFromId(playerId)
   if xPlayer and message:sub(1, 1) == '/' and playerId > 0 then
     CancelEvent()
@@ -83,11 +83,11 @@ AddEventHandler('chatMessage', function(playerId, _, message)
 end)
 
 ---@param reason string
-AddEventHandler('playerDropped', function(reason)
+@on('playerDropped', function(reason)
   playerDrop(source, reason)
 end)
 
-AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
+@on('esx:playerLoaded', function(playerId, xPlayer)
   if xPlayer then
     local job = xPlayer:getJob().name
     local jobKey = ('%s:count'):format(job)
@@ -99,7 +99,7 @@ AddEventHandler('esx:playerLoaded', function(playerId, xPlayer)
   end
 end)
 
-AddEventHandler('esx:setJob', function(playerId, job, lastJob)
+@on('esx:setJob', function(playerId, job, lastJob)
   local lastJobKey = ('%s:count'):format(lastJob.name)
   local jobKey = ('%s:count'):format(job.name)
   local currentLastJob = Core.JobsPlayerCount[lastJob.name]
@@ -114,7 +114,7 @@ AddEventHandler('esx:setJob', function(playerId, job, lastJob)
   Core.IdsByJobs[lastJob.name][playerId] = nil
 end)
 
-RegisterNetEvent('esx:updateWeaponAmmo', function(weaponName, ammoCount)
+@onNet('esx:updateWeaponAmmo', function(weaponName, ammoCount)
   local xPlayer = ESX.GetPlayerFromId(source)
 
   if xPlayer then
@@ -122,7 +122,7 @@ RegisterNetEvent('esx:updateWeaponAmmo', function(weaponName, ammoCount)
   end
 end)
 
-RegisterNetEvent('esx:giveInventoryItem', function(target, itemType, itemName, itemCount)
+@onNet('esx:giveInventoryItem', function(target, itemType, itemName, itemCount)
   local playerId = source
   local sourceXPlayer = ESX.GetPlayerFromId(playerId)
   local targetXPlayer = ESX.GetPlayerFromId(target)
@@ -213,7 +213,7 @@ RegisterNetEvent('esx:giveInventoryItem', function(target, itemType, itemName, i
   end
 end)
 
-RegisterNetEvent('esx:removeInventoryItem', function(itemType, itemName, itemCount)
+@onNet('esx:removeInventoryItem', function(itemType, itemName, itemCount)
   local playerId = source
   local xPlayer = ESX.GetPlayerFromId(playerId)
 
@@ -267,7 +267,7 @@ RegisterNetEvent('esx:removeInventoryItem', function(itemType, itemName, itemCou
   end
 end)
 
-RegisterNetEvent('esx:useItem', function(itemName)
+@onNet('esx:useItem', function(itemName)
   local source = source
   local xPlayer = ESX.GetPlayerFromId(source)
 
@@ -369,7 +369,7 @@ registerCallback('esx:spawnVehicle', function(source, vehData)
   return Citizen.Await(idPromise)
 end)
 
-AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
+@on('txAdmin:events:scheduledRestart', function(eventData)
   if eventData.secondsRemaining == 60 then
     CreateThread(function()
       Wait(50000)
@@ -378,7 +378,7 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
   end
 end)
 
-AddEventHandler('txAdmin:events:serverShuttingDown', function()
+@on('txAdmin:events:serverShuttingDown', function()
   Core.SavePlayers()
 end)
 
@@ -393,7 +393,7 @@ local DoNotUse = {
   ['default_spawnpoint'] = true,
 }
 
-AddEventHandler('onResourceStart', function(key)
+@onStop(function(key)
   if DoNotUse[string.lower(key)] then
     while GetResourceState(key) ~= 'started' do
       Wait(0)

@@ -37,8 +37,8 @@ Core.EnumerateEntitiesWithinDistance = function(entities, isPlayerEntities, coor
   return nearbyEntities
 end
 
-require('client.functions.services.game.players-peds')
-require('client.functions.services.game.utils')
-require('client.functions.services.game.objects')
-require('client.functions.services.game.vehicles')
-require('client.functions.services.game.raycast')
+require('client.functions.services.games.players-peds')
+require('client.functions.services.games.utils')
+require('client.functions.services.games.objects')
+require('client.functions.services.games.vehicles')
+require('client.functions.services.games.raycast')

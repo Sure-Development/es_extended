@@ -2,7 +2,7 @@ local crouchCommand = 'player_crouch'
 local animSet = 'move_ped_crouched'
 local crouched = false
 
-RegisterCommand(crouchCommand, function()
+@command(crouchCommand, function()
   local isDead = LocalPlayer.state.isDead or false
 
   if not isDead then

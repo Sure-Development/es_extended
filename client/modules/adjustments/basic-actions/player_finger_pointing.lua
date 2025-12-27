@@ -41,7 +41,7 @@ local function stopPointing()
   RemoveAnimDict(anim.dict)
 end
 
-RegisterCommand(pointingCommand, function()
+@command(pointingCommand, function()
   local ped = cache.ped
 
   if not IsPedInAnyVehicle(ped, true) and not LocalPlayer.state.isDead then

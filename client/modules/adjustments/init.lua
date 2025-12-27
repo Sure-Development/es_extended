@@ -227,7 +227,7 @@ end
 
 function M:DisableRadio()
   if adjustment.remove_hud_components[16] then
-    AddEventHandler('esx:enteredVehicle', function(vehicle)
+    @on('esx:enteredVehicle', function(vehicle)
       SetVehRadioStation(vehicle, 'OFF')
       SetUserRadioControlEnabled(false)
     end)

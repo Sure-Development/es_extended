@@ -18,13 +18,13 @@ require('client.functions.services.notifications')
 require('client.functions.services.ui')
 require('client.functions.services.games')
 
-RegisterNetEvent('esx:showNotification', ESX.ShowNotification)
+@onNet('esx:showNotification', ESX.ShowNotification)
 
-RegisterNetEvent('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
+@onNet('esx:showAdvancedNotification', ESX.ShowAdvancedNotification)
 
-RegisterNetEvent('esx:showHelpNotification', ESX.ShowHelpNotification)
+@onNet('esx:showHelpNotification', ESX.ShowHelpNotification)
 
-AddEventHandler('onResourceStop', function(resourceName)
+@onStop(function(resourceName)
   for i = 1, #ESX.UI.Menu.Opened, 1 do
     if ESX.UI.Menu.Opened[i] then
       if ESX.UI.Menu.Opened[i].resourceName == resourceName or ESX.UI.Menu.Opened[i].namespace == resourceName then

@@ -79,7 +79,7 @@ function M:Died()
 end
 
 function M:Load()
-  AddEventHandler('esx:onPlayerSpawn', function()
+  @on('esx:onPlayerSpawn', function()
     LocalPlayer.state:set('isDead', false, true)
 
     Citizen.CreateThreadNow(function()
@@ -97,7 +97,7 @@ function M:Load()
     end)
   end)
 
-  AddEventHandler('esx:onPlayerDeath', function()
+  @on('esx:onPlayerDeath', function()
     LocalPlayer.state:set('isDead', true, true)
   end)
 end

@@ -12,7 +12,7 @@
 --]]
 
 ----- Admin commands from esx_adminplus
-RegisterNetEvent('esx:tpm', function()
+@onNet('esx:tpm', function()
   local GetEntityCoords = GetEntityCoords
   local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
   local GetFirstBlipInfoId = GetFirstBlipInfoId
@@ -141,7 +141,7 @@ local function noclipThread()
   end
 end
 
-RegisterNetEvent('esx:noclip', function()
+@onNet('esx:noclip', function()
   local admin = lib.callback.await('esx:isUserAdmin', false)
   if not admin then
     return
@@ -158,11 +158,11 @@ RegisterNetEvent('esx:noclip', function()
   end
 end)
 
-RegisterNetEvent('esx:killPlayer', function()
+@onNet('esx:killPlayer', function()
   SetEntityHealth(cache.ped, 0)
 end)
 
-RegisterNetEvent('esx:repairPedVehicle', function()
+@onNet('esx:repairPedVehicle', function()
   local ped = cache.ped
   local vehicle = GetVehiclePedIsIn(ped, false)
   SetVehicleEngineHealth(vehicle, 1000)
@@ -171,7 +171,7 @@ RegisterNetEvent('esx:repairPedVehicle', function()
   SetVehicleDirtLevel(vehicle, 0)
 end)
 
-RegisterNetEvent('esx:freezePlayer', function(input)
+@onNet('esx:freezePlayer', function(input)
   if input == 'freeze' then
     SetEntityCollision(cache.ped, false, false)
     FreezeEntityPosition(cache.ped, true)

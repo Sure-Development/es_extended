@@ -33,7 +33,7 @@ RegisterNUICallback('close', function(_, cb)
   SetNuiFocus(false, false)
 end)
 
-RegisterCommand('dbg', function(_, args)
+@command('dbg', function(_, args)
   Citizen.Await(Core.NUIReady)
 
   if args[1] and args[1] == 'toggle' then

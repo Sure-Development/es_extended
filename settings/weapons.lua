@@ -11,8 +11,6 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
-local up = table.unpack
-
 ---@class DEX.Config.Weapon
 ---@field name string ชื่ออาวุธ
 ---@field label string คำระบุอาวุธ

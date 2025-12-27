@@ -20,7 +20,7 @@ local M = {
 
 local registerCallback = lib.callback.register
 
-RegisterNetEvent('esx:requestModel', function(model)
+@onNet('esx:requestModel', function(model)
   ESX.Streaming.RequestModel(model)
 end)
 
@@ -34,7 +34,7 @@ end
 
 local hybridType = public.hybrid_data
 
-RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
+@onNet('esx:playerLoaded', function(xPlayer, isNew)
   local tries = 0
   repeat
     Core.Items = lib.loadJson('db.items')
@@ -157,7 +157,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew)
   lib.print.info('Player has initialized')
 end)
 
-RegisterNetEvent('esx:setInventory', function(_newInventory)
+@onNet('esx:setInventory', function(_newInventory)
   local newInventory = {}
 
   for index, item in ipairs(_newInventory) do
@@ -178,21 +178,21 @@ local function onPlayerSpawn()
   ESX.SetPlayerData('dead', false)
 end
 
-AddEventHandler('playerSpawned', onPlayerSpawn)
-AddEventHandler('esx:onPlayerSpawn', onPlayerSpawn)
+@on('playerSpawned', onPlayerSpawn)
+@on('esx:onPlayerSpawn', onPlayerSpawn)
 
-AddEventHandler('esx:onPlayerDeath', function()
+@on('esx:onPlayerDeath', function()
   ESX.SetPlayerData('dead', true)
 end)
 
-AddEventHandler('skinchanger:modelLoaded', function()
+@on('skinchanger:modelLoaded', function()
   while not ESX.PlayerLoaded do
     Wait(100)
   end
   TriggerEvent('esx:restoreLoadout')
 end)
 
-AddEventHandler('esx:restoreLoadout', function()
+@on('esx:restoreLoadout', function()
   local ammoTypes = {}
   RemoveAllPedWeapons(cache.ped, true)
 
@@ -249,7 +249,7 @@ AddStateBagChangeHandler('VehicleProperties', nil, function(bagName, _, value)
   ESX.Game.SetVehicleProperties(vehicle, value)
 end)
 
-RegisterNetEvent('esx:setAccountMoney', function(account)
+@onNet('esx:setAccountMoney', function(account)
   local retval = true
   if hybridType == true or hybridType == 'hash' then
     retval = pcall(function()
@@ -274,15 +274,15 @@ RegisterNetEvent('esx:setAccountMoney', function(account)
   ESX.SetPlayerData('accounts', ESX.PlayerData.accounts)
 end)
 
-RegisterNetEvent('esx:setJob', function(job)
+@onNet('esx:setJob', function(job)
   ESX.SetPlayerData('job', job)
 end)
 
-RegisterNetEvent('esx:setGroup', function(group)
+@onNet('esx:setGroup', function(group)
   ESX.SetPlayerData('group', group)
 end)
 
-RegisterNetEvent('esx:registerSuggestions', function(registeredCommands)
+@onNet('esx:registerSuggestions', function(registeredCommands)
   for name, command in pairs(registeredCommands) do
     if command.suggestion then
       TriggerEvent('chat:addSuggestion', ('/%s'):format(name), command.suggestion.help, command.suggestion.arguments)
@@ -290,7 +290,7 @@ RegisterNetEvent('esx:registerSuggestions', function(registeredCommands)
   end
 end)
 
-RegisterNetEvent('esx:addInventoryItem', function(item, count)
+@onNet('esx:addInventoryItem', function(item, count)
   local retval = true
 
   if hybridType == true or hybridType == 'hash' then
@@ -313,7 +313,7 @@ RegisterNetEvent('esx:addInventoryItem', function(item, count)
   end
 end)
 
-RegisterNetEvent('esx:removeInventoryItem', function(item, count)
+@onNet('esx:removeInventoryItem', function(item, count)
   local retval = true
 
   if hybridType == true or hybridType == 'hash' then
@@ -336,7 +336,7 @@ RegisterNetEvent('esx:removeInventoryItem', function(item, count)
   end
 end)
 
-RegisterNetEvent('esx:addLoadoutItem', function(weaponName, weaponLabel, ammo)
+@onNet('esx:addLoadoutItem', function(weaponName, weaponLabel, ammo)
   local data = {
     name = weaponName,
     ammo = ammo,
@@ -369,7 +369,7 @@ RegisterNetEvent('esx:addLoadoutItem', function(weaponName, weaponLabel, ammo)
   ESX.SetPlayerData('loadout', ESX.PlayerData.loadout)
 end)
 
-RegisterNetEvent('esx:removeLoadoutItem', function(weaponName, weaponLabel)
+@onNet('esx:removeLoadoutItem', function(weaponName, weaponLabel)
   local retval = true
 
   if hybridType == true or hybridType == 'hash' then
@@ -399,16 +399,16 @@ registerCallback('esx:getVehicleType', function(model)
   return ESX.GetVehicleTypeClient(model)
 end)
 
-RegisterNetEvent('esx:updatePlayerData', function(key, val)
+@onNet('esx:updatePlayerData', function(key, val)
   ESX.SetPlayerData(key, val)
 end)
 
 ---@param command string
-RegisterNetEvent('esx:executeCommand', function(command)
+@onNet('esx:executeCommand', function(command)
   ExecuteCommand(command)
 end)
 
-AddEventHandler('onResourceStop', function(resource)
+@on('onResourceStop', function(resource)
   if Core.Events[resource] then
     for i = 1, #Core.Events[resource] do
       RemoveEventHandler(Core.Events[resource][i])

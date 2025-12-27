@@ -5,7 +5,7 @@ local anim = {
   name = 'handsup_enter',
 }
 
-RegisterCommand(handsupCommand, function()
+@command(handsupCommand, function()
   local ped = cache.ped
   local notInVehicle = cache.vehicle == false or cache.vehicle == nil
 
