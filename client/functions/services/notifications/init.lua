@@ -11,13 +11,48 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
+local allowNotifyTypes = lib.array:new('success', 'info', 'warn', 'error')
+
+---@alias DEX.NotifyType
+---| 'success'
+---| 'info'
+---| 'warn'
+---| 'error'
+---| 1 success
+---| 2 info
+---| 3 warn
+---| 4 error
+---@param notifyType DEX.NotifyType
+---@param message string
+---@param duration integer?
+@onNet('dex:notification', function(notifyType, message, duration)
+  if notifyType == 1 then notifyType = 'success'
+  elseif notifyType == 2 then notifyType = 'info'
+  elseif notifyType == 3 then notifyType = 'warn'
+  elseif notifyType == 4 then notifyType = 'error' end
+
+  if not allowNotifyTypes:includes(notifyType) then
+    return lib.print.warn(('dex:notification does not support type %s'):format(notifyType))
+  end
+
+  @emitNui({
+    type = 'notification/add',
+    data = {
+      id = lib.string.random('^N^O^T^I^F^Y^-....................'),
+      type = notifyType,
+      text = message,
+      duration = duration
+    }
+  })
+end)
+
 ---@param message string The message to show
 ---@param notifyType? string The type of notification to show
 ---@param length? number The length of the notification
 ---@param title? string The title of the notification
 ---@return nil
 function ESX.ShowNotification(message, notifyType, length, title)
-  TriggerEvent('hud:notification', notifyType, message, length)
+  @emit('dex:notification', notifyType, message, length)
 end
 
 ---@param sender string
