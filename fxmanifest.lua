@@ -4,8 +4,8 @@ fx_version 'cerulean'
 name 'Project Dogeaterx'
 description 'The Core resource that provides the functionalities for all other resources.'
 lua54 'yes'
-version '2.0.0-pbbt-0.5.5'
-git_version '2.0.0-pbbt-0.5.5'
+version '2.1.0-pb'
+git_version '2.1.0-pb'
 use_experimental_fxv2_oal 'yes'
 author 'ESX | Dogeaterx (Sure)'
 
@@ -16,6 +16,7 @@ shared_scripts {
 
 	'shared/main.lua',
 	'shared/functions.lua',
+	'shared/require.lua',
 	'shared/modules/*.lua',
 }
 
@@ -38,16 +39,18 @@ files {
 
 	'locale.lua',
 	'imports.lua',
+	'shared/require.lua',
 
 	--- Shared
 	'settings/**/*.lua',
+	'modules/**/*.lua',
 
 	--- Store data
 	'locales/*.json',
 	'db/items.json',
 
 	--- For: client
-	'client/**/*.lua'
+	'client/**/*.lua',
 }
 
 dependencies {
