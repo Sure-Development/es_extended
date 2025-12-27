@@ -9,15 +9,15 @@ return function(cooldown)
     exitName = 'exit',
   }
 
-  RegisterCommand('+pressShift', function()
+  RegisterCommand('+press_shift', function()
     pressShift = true
   end, false)
 
-  RegisterCommand('-pressShift', function()
+  RegisterCommand('-press_shift', function()
     pressShift = false
   end, false)
 
-  RegisterKeyMapping('+pressShift', '(Dont\'n change) Press Shift', 'keyboard', 'LSHIFT')
+  RegisterKeyMapping('+press_shift', '(Don\'t change) Press Shift', 'keyboard', 'LSHIFT')
 
   RegisterCommand(slideCommand, function()
     local isDead = LocalPlayer.state.isDead or false
