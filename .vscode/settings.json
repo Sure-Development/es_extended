@@ -7,5 +7,12 @@
   "Lua.workspace.library": [
     "E:\\VSCode-Exts",
     "C:\\Users\\mysbryce\\AppData\\Roaming\\Code\\User\\globalStorage\\overextended.cfxlua-vscode\\library"
+  ],
+  "Lua.diagnostics.globals": [
+    "MySQL",
+    "GetPlayerTimeOnline",
+    "SetEntityOrphanMode",
+    "lib",
+    "cache"
   ]
 }
