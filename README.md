@@ -12,4 +12,4 @@
 <br>
 
 <p align=center>Modern-first framework for developing FiveM Server</p>
-<p align=center><strong>Version</strong>: 2.10.0</p>
+<p align=center><strong>Version</strong>: 2.10.1</p>
