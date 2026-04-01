@@ -1,0 +1,57 @@
+Project: Dogeaterx Project
+Type: FiveM framework core resource (es_extended fork)
+Runtime: Lua 5.4 on FXServer / GTA V FiveM
+
+Overview
+- This repository is the core framework resource for a FiveM server.
+- It provides player lifecycle, accounts, inventory, loadout, jobs, callbacks, commands, metadata, and shared utility behavior.
+- It uses oxmysql for persistence and ox_lib for helpers, callbacks, classes, and utility functions.
+
+Entrypoints
+- Server entrypoint: `server/init.lua`
+- Client entrypoint: `client/init.lua`
+- Resource manifest: `fxmanifest.lua`
+
+Main folders
+- `server/`: server bootstrap, ORM, player class, services, persistence, commands, and gameplay modules
+- `client/`: client bootstrap, player state, UI helpers, streaming, admin helpers, and gameplay modules
+- `shared/`: shared functions, module loading, and common helpers
+- `settings/`: public configuration such as starter data, admin groups, identifier type, and feature flags
+- `db/`: item data and related bootstrap resources
+- `nui/`: web UI source/build output for the in-game UI
+
+Player model
+- Active players are stored in `ESX.Players`.
+- Players are also indexed by identifier in `Core.PlayersByIdentifier`.
+- The main player object is `ExtendedPlayer` from `server/classes/player/init.lua`.
+- Internal inventory and loadout storage is normalized for fast keyed lookup by item or weapon name.
+
+Persistence
+- Player data is saved to SQL tables through the ORM layer in `server/classes/orm/`.
+- Important persisted fields include accounts, inventory, job, loadout, metadata, position, identity fields, and skin.
+- Save helpers live in `server/functions/services/players/init.lua`.
+
+Important behaviors
+- `ESX.GetPlayerFromId(source)` returns the full `ExtendedPlayer` by default.
+- `ESX.GetPlayerFromId(source, filters)` can now return a filtered table containing only selected properties and methods.
+- `ESX.GetPlayerFromIdentifier(identifier, filters)` supports the same filtered behavior.
+- `ESX.GetPlayerFromIdentifiers(identifier, filters)` is an alias to the identifier lookup helper.
+- `xPlayer:getInventory(true)` and `xPlayer:getLoadout(true)` return minimal persistence-oriented data.
+- `xPlayer:getInventory()` and `xPlayer:getLoadout()` return array-like data intended for compatibility/public consumers.
+
+Key gameplay systems
+- Inventory item add/remove/set/carry logic
+- Weapon/loadout management, ammo, components, and tint handling
+- Job assignment and job-grade loading
+- Player join/load/create/drop flows
+- Admin and gameplay commands
+- Callback and event helpers for client-server interaction
+
+Implementation notes
+- Keep backward compatibility in mind for external resources consuming ESX callbacks and player data.
+- Avoid exposing internal mutable hash tables directly from public callbacks unless the contract explicitly expects them.
+- When changing inventory/loadout behavior, verify save/load flows, client sync events, and admin commands together.
+- Configuration flags in `settings/public.lua` affect identifier strategy, hybrid client data shape, starter values, and debug logging.
+
+Current release
+- Framework version is defined in `fxmanifest.lua` and mirrored in `README.md`.
