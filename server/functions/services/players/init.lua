@@ -13,6 +13,22 @@
 
 local public = require('settings.public')
 
+local function debugSaveLog(action, xPlayer)
+  if not public.debug_inventory_loadout then
+    return
+  end
+
+  local inventory = xPlayer:getInventory(true)
+  local loadout = xPlayer:getLoadout(true)
+
+  lib.print.info(('[debug:save] action=%s source=%s inventory=%s loadout=%s'):format(
+    action,
+    xPlayer.source,
+    ESX.Table.SizeOf(inventory),
+    ESX.Table.SizeOf(loadout)
+  ))
+end
+
 local function updateHealthAndArmorInMetadata(xPlayer)
   local ped = GetPlayerPed(xPlayer.source)
   local playerState = Player(xPlayer.source).state
@@ -34,6 +50,7 @@ end
 ---@return nil
 function Core.SavePlayer(xPlayer, cb)
   updateHealthAndArmorInMetadata(xPlayer)
+  debugSaveLog('single', xPlayer)
   local parameters = {
     --[[ accounts ]]
     json.encode(xPlayer:getAccounts(true)),
@@ -83,6 +100,7 @@ function Core.SavePlayers(cb)
 
   for _, xPlayer in pairs(ESX.Players) do
     updateHealthAndArmorInMetadata(xPlayer)
+    debugSaveLog('bulk', xPlayer)
 
     parameters[#parameters + 1] = {
       --[[ accounts ]]

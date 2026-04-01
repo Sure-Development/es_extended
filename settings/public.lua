@@ -74,6 +74,10 @@ PUBLIC.admin_groups = {
 ---@type number
 PUBLIC.distance_give = 4.0
 
+--- เปิด debug log สำหรับ flow inventory / loadout / save-load
+---@type boolean
+PUBLIC.debug_inventory_loadout = false
+
 --- กำหนดตัวระบุ Identifier Type
 ---@alias Settings.Public.IdentifierType
 ---| 'steam'

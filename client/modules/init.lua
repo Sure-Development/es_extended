@@ -34,6 +34,48 @@ end
 
 local hybridType = public.hybrid_data
 
+local function debugClientLog(action, name, extra)
+  if not public.debug_inventory_loadout then
+    return
+  end
+
+  lib.print.info(('[debug:client] action=%s name=%s %s'):format(action, tostring(name), extra or ''))
+end
+
+local function findEntry(collection, name)
+  if (hybridType == true or hybridType == 'hash') and collection[name] then
+    return collection[name]
+  end
+
+  if hybridType == true or hybridType == 'numeric' then
+    for index, entry in ipairs(collection) do
+      if entry.name == name then
+        return entry, index
+      end
+    end
+  end
+end
+
+local function setHybridEntry(collection, name, value)
+  if hybridType == true or hybridType == 'hash' then
+    collection[name] = value
+  end
+
+  if hybridType == true or hybridType == 'numeric' then
+    local _, entryIndex = findEntry(collection, name)
+
+    if value == nil then
+      if entryIndex then
+        table.remove(collection, entryIndex)
+      end
+    elseif entryIndex then
+      collection[entryIndex] = value
+    else
+      collection[#collection + 1] = value
+    end
+  end
+end
+
 @onNet('esx:playerLoaded', function(xPlayer, isNew)
   local tries = 0
   repeat
@@ -194,9 +236,15 @@ end)
 
 @on('esx:restoreLoadout', function()
   local ammoTypes = {}
+  local restoredWeapons = {}
   RemoveAllPedWeapons(cache.ped, true)
 
   for _, v in pairs(ESX.PlayerData.loadout) do
+    if restoredWeapons[v.name] then
+      goto continue
+    end
+
+    restoredWeapons[v.name] = true
     local weaponName = v.name
     local weaponHash = joaat(weaponName)
 
@@ -205,15 +253,19 @@ end)
 
     local ammoType = GetPedAmmoTypeFromWeapon(cache.ped, weaponHash)
 
-    for _, v2 in ipairs(v.components) do
-      local componentHash = ESX.GetWeaponComponent(weaponName, v2).hash
-      GiveWeaponComponentToPed(cache.ped, weaponHash, componentHash)
+    for _, v2 in ipairs(v.components or {}) do
+      local componentData = ESX.GetWeaponComponent(weaponName, v2)
+      if componentData then
+        GiveWeaponComponentToPed(cache.ped, weaponHash, componentData.hash)
+      end
     end
 
     if not ammoTypes[ammoType] then
       AddAmmoToPed(cache.ped, weaponHash, v.ammo)
       ammoTypes[ammoType] = true
     end
+
+    ::continue::
   end
 end)
 
@@ -267,7 +319,7 @@ end)
   end
 
   if not retval then
-    lib.print.error(('Error during esx:addInventoryItem %s'):format(json.encode(account)))
+    lib.print.error(('Error during esx:setAccountMoney %s'):format(json.encode(account)))
     return
   end
 
@@ -291,49 +343,29 @@ end)
 end)
 
 @onNet('esx:addInventoryItem', function(item, count)
-  local retval = true
+  local itemData = findEntry(ESX.PlayerData.inventory, item)
 
-  if hybridType == true or hybridType == 'hash' then
-    retval = pcall(function()
-      ESX.PlayerData.inventory[item].count = count
-    end)
-  end
-
-  if hybridType == true or hybridType == 'numeric' then
-    for k, v in ipairs(ESX.PlayerData.inventory) do
-      if v.name == item then
-        ESX.PlayerData.inventory[k].count = count
-        break
-      end
-    end
-  end
-
-  if not retval then
+  if not itemData then
     lib.print.error(('Error during esx:addInventoryItem %s %s'):format(item, count))
+    return
   end
+
+  itemData.count = count
+  debugClientLog('addInventoryItem', item, ('count=%s'):format(count))
+  ESX.SetPlayerData('inventory', ESX.PlayerData.inventory)
 end)
 
 @onNet('esx:removeInventoryItem', function(item, count)
-  local retval = true
+  local itemData = findEntry(ESX.PlayerData.inventory, item)
 
-  if hybridType == true or hybridType == 'hash' then
-    retval = pcall(function()
-      ESX.PlayerData.inventory[item].count = count
-    end)
-  end
-
-  if hybridType == true or hybridType == 'numeric' then
-    for k, v in ipairs(ESX.PlayerData.inventory) do
-      if v.name == item then
-        ESX.PlayerData.inventory[k].count = count
-        break
-      end
-    end
-  end
-
-  if not retval then
+  if not itemData then
     lib.print.error(('Error during esx:removeInventoryItem %s %s'):format(item, count))
+    return
   end
+
+  itemData.count = count
+  debugClientLog('removeInventoryItem', item, ('count=%s'):format(count))
+  ESX.SetPlayerData('inventory', ESX.PlayerData.inventory)
 end)
 
 @onNet('esx:addLoadoutItem', function(weaponName, weaponLabel, ammo)
@@ -345,53 +377,87 @@ end)
     tintIndex = 0,
   }
 
-  local retval = true
-  if hybridType == true or hybridType == 'hash' then
-    retval = pcall(function()
-      ESX.PlayerData.loadout[weaponName] = data
-    end)
+  local currentWeapon = findEntry(ESX.PlayerData.loadout, weaponName)
+  if currentWeapon then
+    currentWeapon.ammo = ammo
+    currentWeapon.label = weaponLabel
+  else
+    setHybridEntry(ESX.PlayerData.loadout, weaponName, data)
   end
 
-  if hybridType == true or hybridType == 'numeric' then
-    for _, v in ipairs(ESX.PlayerData.loadout) do
-      if v.name == weaponName then
-        ESX.PlayerData.loadout[#ESX.PlayerData.loadout + 1] = data
-        break
-      end
-    end
-  end
-
-  if not retval then
-    lib.print.error(('Error during esx:addLoadoutItem %s %s %s'):format(weaponName, weaponLabel, ammo))
-    return
-  end
-
+  debugClientLog('addLoadoutItem', weaponName, ('ammo=%s'):format(ammo))
   ESX.SetPlayerData('loadout', ESX.PlayerData.loadout)
 end)
 
 @onNet('esx:removeLoadoutItem', function(weaponName, weaponLabel)
-  local retval = true
-
-  if hybridType == true or hybridType == 'hash' then
-    retval = pcall(function()
-      ESX.PlayerData.loadout[weaponName] = nil
-    end)
-  end
-
-  if hybridType == true or hybridType == 'numeric' then
-    for k, v in ipairs(ESX.PlayerData.loadout) do
-      if v.name == weaponName then
-        table.remove(ESX.PlayerData.loadout, k)
-        break
-      end
-    end
-  end
-
-  if not retval then
-    lib.print.error(('Error during esx:addLoadoutItem %s %s'):format(weaponName, weaponLabel))
+  local currentWeapon = findEntry(ESX.PlayerData.loadout, weaponName)
+  if not currentWeapon then
+    lib.print.error(('Error during esx:removeLoadoutItem %s %s'):format(weaponName, weaponLabel))
     return
   end
 
+  setHybridEntry(ESX.PlayerData.loadout, weaponName, nil)
+  debugClientLog('removeLoadoutItem', weaponName)
+  ESX.SetPlayerData('loadout', ESX.PlayerData.loadout)
+end)
+
+@onNet('esx:addWeaponComponent', function(weaponName, componentName)
+  local currentWeapon = findEntry(ESX.PlayerData.loadout, weaponName)
+  if not currentWeapon then
+    lib.print.error(('Error during esx:addWeaponComponent %s %s'):format(weaponName, componentName))
+    return
+  end
+
+  for _, currentComponent in ipairs(currentWeapon.components) do
+    if currentComponent == componentName then
+      return
+    end
+  end
+
+  currentWeapon.components[#currentWeapon.components + 1] = componentName
+
+  local componentData = ESX.GetWeaponComponent(weaponName, componentName)
+  if componentData then
+    GiveWeaponComponentToPed(cache.ped, joaat(weaponName), componentData.hash)
+  end
+
+  debugClientLog('addWeaponComponent', weaponName, ('component=%s'):format(componentName))
+  ESX.SetPlayerData('loadout', ESX.PlayerData.loadout)
+end)
+
+@onNet('esx:removeWeaponComponent', function(weaponName, componentName)
+  local currentWeapon = findEntry(ESX.PlayerData.loadout, weaponName)
+  if not currentWeapon then
+    lib.print.error(('Error during esx:removeWeaponComponent %s %s'):format(weaponName, componentName))
+    return
+  end
+
+  for index, currentComponent in ipairs(currentWeapon.components) do
+    if currentComponent == componentName then
+      table.remove(currentWeapon.components, index)
+      break
+    end
+  end
+
+  local componentData = ESX.GetWeaponComponent(weaponName, componentName)
+  if componentData then
+    RemoveWeaponComponentFromPed(cache.ped, joaat(weaponName), componentData.hash)
+  end
+
+  debugClientLog('removeWeaponComponent', weaponName, ('component=%s'):format(componentName))
+  ESX.SetPlayerData('loadout', ESX.PlayerData.loadout)
+end)
+
+@onNet('esx:setWeaponTint', function(weaponName, tintIndex)
+  local currentWeapon = findEntry(ESX.PlayerData.loadout, weaponName)
+  if not currentWeapon then
+    lib.print.error(('Error during esx:setWeaponTint %s %s'):format(weaponName, tintIndex))
+    return
+  end
+
+  currentWeapon.tintIndex = tintIndex
+  SetPedWeaponTintIndex(cache.ped, joaat(weaponName), tintIndex)
+  debugClientLog('setWeaponTint', weaponName, ('tint=%s'):format(tintIndex))
   ESX.SetPlayerData('loadout', ESX.PlayerData.loadout)
 end)
 

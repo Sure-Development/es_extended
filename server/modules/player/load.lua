@@ -32,6 +32,19 @@ local mapKeyMethods = {
   coords = 'getCoords',
 }
 
+local function decodeStoredTable(value)
+  if not value or value == '' then
+    return {}
+  end
+
+  local decoded = json.decode(value)
+  if type(decoded) == 'string' then
+    decoded = json.decode(decoded)
+  end
+
+  return type(decoded) == 'table' and decoded or {}
+end
+
 ---@class (functions) DEX.Player.Functions : DEX.Player
 ---@param src number
 ---@return DEX.Player.Functions
@@ -85,8 +98,7 @@ return function(identifier, source, isNew)
     return
   end
 
-  local accounts = result.accounts
-  accounts = (accounts and accounts ~= '') and json.decode(accounts) or {}
+  local accounts = decodeStoredTable(result.accounts)
 
   for account, data in pairs(public.accounts) do
     data.round = data.round or data.round == nil
@@ -122,7 +134,7 @@ return function(identifier, source, isNew)
     grade_salary = gradeObject.salary,
   }
 
-  local inventory = (result.inventory and result.inventory ~= '') and json.decode(result.inventory) or {}
+  local inventory = decodeStoredTable(result.inventory)
 
   for name, item in pairs(ESX.Items) do
     local count = inventory[name] or 0
@@ -160,12 +172,12 @@ return function(identifier, source, isNew)
   end
 
   if result.loadout and result.loadout ~= '' then
-    local loadout = json.decode(result.loadout)
+    local loadout = decodeStoredTable(result.loadout)
     for name, weapon in pairs(loadout) do
       local label = ESX.GetWeaponLabel(name)
 
       if label then
-        userData.loadout[name] = {
+        userData.loadout[#userData.loadout + 1] = {
           name = name,
           ammo = weapon.ammo,
           label = label,
@@ -174,6 +186,18 @@ return function(identifier, source, isNew)
         }
       end
     end
+  end
+
+  if public.debug_inventory_loadout then
+    lib.print.info(
+      ('[debug:playerLoad] source=%s identifier=%s inventoryClient=%s loadout=%s isNew=%s'):format(
+        source,
+        identifier,
+        #userData.inventoryClient,
+        #userData.loadout,
+        tostring(isNew == true)
+      )
+    )
   end
 
   userData.coords = json.decode(result.position) or public.spawn_points[ESX.Math.Random(1, #public.spawn_points)]

@@ -11,37 +11,48 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
+local public = require('settings.public')
+
+local function debugLoadoutLog(xPlayer, action, weaponName, extra)
+  if not public.debug_inventory_loadout then
+    return
+  end
+
+  lib.print.info(('[debug:loadout] source=%s action=%s weapon=%s %s'):format(xPlayer.source, action, weaponName, extra or ''))
+end
+
 ---@param minimal boolean?
 ---@overload fun(minimal: true): table<string, { ammo: integer, tintIndex?: integer, components: table<integer, string> }>
 ---@overload fun(minimal: false | nil): DEX.Loadout[]
 function ExtendedPlayer:getLoadout(minimal)
-  if not minimal then
-    return self.loadout
-  end
-  local minimalLoadout = {}
+  local loadout = {}
 
-  for _, v in pairs(self.loadout) do
-    minimalLoadout[v.name] = { ammo = v.ammo }
-    if v.tintIndex > 0 then
-      minimalLoadout[v.name].tintIndex = v.tintIndex
-    end
+  for _, weapon in pairs(self.loadout) do
+    if minimal then
+      loadout[weapon.name] = { ammo = weapon.ammo }
+      if weapon.tintIndex > 0 then
+        loadout[weapon.name].tintIndex = weapon.tintIndex
+      end
 
-    if #v.components > 0 then
-      local components = {}
+      if #weapon.components > 0 then
+        local components = {}
 
-      for _, component in ipairs(v.components) do
-        if component ~= 'clip_default' then
-          components[#components + 1] = component
+        for _, component in ipairs(weapon.components) do
+          if component ~= 'clip_default' then
+            components[#components + 1] = component
+          end
+        end
+
+        if #components > 0 then
+          loadout[weapon.name].components = components
         end
       end
-
-      if #components > 0 then
-        minimalLoadout[v.name].components = components
-      end
+    else
+      loadout[#loadout + 1] = weapon
     end
   end
 
-  return minimalLoadout
+  return loadout
 end
 
 ---@param name string
@@ -59,8 +70,8 @@ function ExtendedPlayer:addWeapon(name, ammo)
       tintIndex = 0,
     }
 
+    debugLoadoutLog(self, 'addWeapon', name, ('ammo=%s'):format(ammo))
     GiveWeaponToPed(GetPlayerPed(self.source), joaat(name), ammo, false, false)
-    self:triggerEvent('esx:addInventoryItem', weaponLabel, false, true)
     self:triggerEvent('esx:addLoadoutItem', name, weaponLabel, ammo)
   end
 end
@@ -79,8 +90,9 @@ function ExtendedPlayer:addWeaponComponent(name, component)
         self.loadout[loadoutKey].components[#self.loadout[loadoutKey].components + 1] = component
         local componentHash = ESX.GetWeaponComponent(name, component).hash
 
+        debugLoadoutLog(self, 'addComponent', name, ('component=%s'):format(component))
         GiveWeaponComponentToPed(GetPlayerPed(self.source), joaat(name), componentHash)
-        self:triggerEvent('esx:addInventoryItem', _component.label, false, true)
+        self:triggerEvent('esx:addWeaponComponent', name, component)
       end
     end
   end
@@ -94,6 +106,7 @@ function ExtendedPlayer:addWeaponAmmo(name, count)
 
   if weapon then
     weapon.ammo = weapon.ammo + count
+    debugLoadoutLog(self, 'addAmmo', name, ('ammo=%s'):format(weapon.ammo))
     SetPedAmmo(GetPlayerPed(self.source), joaat(name), weapon.ammo)
   end
 end
@@ -109,6 +122,7 @@ function ExtendedPlayer:updateWeaponAmmo(name, count)
   end
 
   weapon.ammo = count
+  debugLoadoutLog(self, 'updateAmmo', name, ('ammo=%s'):format(weapon.ammo))
 
   if weapon.ammo <= 0 then
     local _, weaponConfig = ESX.GetWeapon(name)
@@ -129,8 +143,8 @@ function ExtendedPlayer:setWeaponTint(name, tintIndex)
 
     if weaponObject.tints and weaponObject.tints[tintIndex] then
       self.loadout[loadoutKey].tintIndex = tintIndex
+      debugLoadoutLog(self, 'setTint', name, ('tint=%s'):format(tintIndex))
       self:triggerEvent('esx:setWeaponTint', name, tintIndex)
-      self:triggerEvent('esx:addInventoryItem', weaponObject.tints[tintIndex], false, true)
     end
   end
 end
@@ -158,7 +172,7 @@ function ExtendedPlayer:removeWeapon(name)
 
   if self.loadout[name] then
     weaponLabel = self.loadout[name].label
-    for _, v2 in ipairs(self.loadout[name].components or {}) do
+    for _, v2 in ipairs(ESX.Table.Clone(self.loadout[name].components or {})) do
       self:removeWeaponComponent(name, v2)
     end
 
@@ -166,11 +180,11 @@ function ExtendedPlayer:removeWeapon(name)
     RemoveWeaponFromPed(playerPed, weaponHash)
     SetPedAmmo(playerPed, weaponHash, 0)
 
+    debugLoadoutLog(self, 'removeWeapon', name)
     self.loadout[name] = nil
   end
 
   if weaponLabel then
-    self:triggerEvent('esx:removeInventoryItem', weaponLabel, false, true)
     self:triggerEvent('esx:removeLoadoutItem', name, weaponLabel)
   end
 end
@@ -193,8 +207,8 @@ function ExtendedPlayer:removeWeaponComponent(name, component)
           end
         end
 
+        debugLoadoutLog(self, 'removeComponent', name, ('component=%s'):format(component))
         self:triggerEvent('esx:removeWeaponComponent', name, component)
-        self:triggerEvent('esx:removeInventoryItem', _component.label, false, true)
       end
     end
   end
@@ -208,6 +222,7 @@ function ExtendedPlayer:removeWeaponAmmo(name, count)
 
   if weapon then
     weapon.ammo = weapon.ammo - count
+    debugLoadoutLog(self, 'removeAmmo', name, ('ammo=%s'):format(weapon.ammo))
     SetPedAmmo(GetPlayerPed(self.source), joaat(name), weapon.ammo)
   end
 end
@@ -234,13 +249,7 @@ end
 ---@param name string
 ---@overload fun(name: string): boolean
 function ExtendedPlayer:hasWeapon(name)
-  for _, v in ipairs(self.loadout) do
-    if v.name == name then
-      return true
-    end
-  end
-
-  return false
+  return self.loadout[name] ~= nil
 end
 
 ---@param name string

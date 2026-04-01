@@ -174,6 +174,9 @@ end)
     local weaponComponents = ESX.Table.Clone(weapon.components)
     local weaponTint = weapon.tintIndex
 
+    sourceXPlayer:removeWeapon(itemName)
+    targetXPlayer:addWeapon(itemName, itemCount)
+
     if weaponTint then
       targetXPlayer:setWeaponTint(itemName, weaponTint)
     end
@@ -183,9 +186,6 @@ end)
         targetXPlayer:addWeaponComponent(itemName, v)
       end
     end
-
-    sourceXPlayer:removeWeapon(itemName)
-    targetXPlayer:addWeapon(itemName, itemCount)
   elseif itemType == 'item_ammo' then
     if not sourceXPlayer:hasWeapon(itemName) then
       return

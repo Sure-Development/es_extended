@@ -11,6 +11,16 @@
   ⚠  OUR CODE | THANKS FOR YOUR TRUSTED
 --]]
 
+local public = require('settings.public')
+
+local function debugInventoryLog(xPlayer, action, name, count)
+  if not public.debug_inventory_loadout then
+    return
+  end
+
+  lib.print.info(('[debug:inventory] source=%s action=%s item=%s count=%s'):format(xPlayer.source, action, name, count))
+end
+
 ---@param minimal boolean?
 ---@overload fun(minimal: true): table<string, integer>
 ---@overload fun(minimal: false | nil): DEX.Item[]
@@ -56,6 +66,7 @@ function ExtendedPlayer:addInventoryItem(name, count)
   if item then
     count = lib.math.round(count)
     item.count = item.count + count
+    debugInventoryLog(self, 'add', item.name, item.count)
 
     TriggerEvent('esx:onAddInventoryItem', self.source, item.name, item.count)
     self:triggerEvent('esx:addInventoryItem', item.name, item.count)
@@ -75,6 +86,7 @@ function ExtendedPlayer:removeInventoryItem(name, count)
 
       if newCount >= 0 then
         item.count = newCount
+        debugInventoryLog(self, 'remove', item.name, item.count)
 
         TriggerEvent('esx:onRemoveInventoryItem', self.source, item.name, item.count)
         self:triggerEvent('esx:removeInventoryItem', item.name, item.count)
@@ -93,6 +105,7 @@ function ExtendedPlayer:setInventoryItem(name, count)
 
   if item and count >= 0 then
     count = lib.math.round(count)
+    debugInventoryLog(self, 'set', item.name, count)
 
     if count > item.count then
       self:addInventoryItem(item.name, count - item.count)

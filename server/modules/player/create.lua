@@ -34,7 +34,7 @@ return function(identifier, source)
     identifier = identifier,
     group = defaultGroup,
     accounts = json.encode(accounts),
-    inventory = json.encode(json.encode(public.starter.items)),
+    inventory = json.encode(public.starter.items),
   })
 
   loadPlayer(identifier, source, true)

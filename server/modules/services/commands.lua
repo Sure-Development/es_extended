@@ -345,7 +345,7 @@ ESX.RegisterCommand(
   'clearinventory',
   'admin',
   function(xPlayer, args)
-    for _, v in ipairs(args.playerId.inventory) do
+    for _, v in pairs(args.playerId:getInventory()) do
       if v.count > 0 then
         args.playerId:setInventoryItem(v.name, 0)
       end
@@ -366,8 +366,8 @@ ESX.RegisterCommand(
   'clearloadout',
   'admin',
   function(xPlayer, args)
-    for i = #args.playerId.loadout, 1, -1 do
-      args.playerId:removeWeapon(args.playerId.loadout[i].name)
+    for _, weapon in pairs(args.playerId:getLoadout()) do
+      args.playerId:removeWeapon(weapon.name)
     end
     TriggerEvent('esx:playerLoadoutCleared', args.playerId)
   end,
