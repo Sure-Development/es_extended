@@ -234,14 +234,53 @@ end
 
 ---@param source number
 ---@return DEX.Player?
-function ESX.GetPlayerFromId(source)
-  return ESX.Players[tonumber(source)]
+local function applyPlayerFilters(xPlayer, filters)
+  if not xPlayer or type(filters) ~= 'table' or #filters == 0 then
+    return xPlayer
+  end
+
+  local filteredPlayer = {}
+
+  for _, key in ipairs(filters) do
+    local value = xPlayer[key]
+
+    if type(value) == 'function' then
+      filteredPlayer[key] = function(...)
+        local args = { ... }
+
+        if args[1] == filteredPlayer then
+          table.remove(args, 1)
+        end
+
+        return value(table.unpack(args))
+      end
+    elseif value ~= nil then
+      filteredPlayer[key] = value
+    end
+  end
+
+  return filteredPlayer
+end
+
+---@param source number
+---@param filters string[]?
+---@return DEX.Player? | table<string, any>
+function ESX.GetPlayerFromId(source, filters)
+  return applyPlayerFilters(ESX.Players[tonumber(source)], filters)
 end
 
 ---@param identifier string
----@return DEX.Player?
-function ESX.GetPlayerFromIdentifier(identifier)
-  return Core.PlayersByIdentifier[identifier]
+---@param filters string[]?
+---@return DEX.Player? | table<string, any>
+function ESX.GetPlayerFromIdentifier(identifier, filters)
+  return applyPlayerFilters(Core.PlayersByIdentifier[identifier], filters)
+end
+
+---@param identifier string
+---@param filters string[]?
+---@return DEX.Player? | table<string, any>
+function ESX.GetPlayerFromIdentifiers(identifier, filters)
+  return ESX.GetPlayerFromIdentifier(identifier, filters)
 end
 
 ---@param identifier string
